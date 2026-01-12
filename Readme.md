@@ -68,3 +68,4 @@
    | *Dynamiczne pytania* | Pytania zależne od wcześniejszych odpowiedzi |
    | *Token* | Unikalny kod dostępu do ankiety |
    | *Warunkowe wyświetlanie* | Mechanizm pokazywania pytań w zależności od poprzednich odpowiedzi |
+   
