@@ -34,8 +34,8 @@
    - *Tworzenie ankiet statycznych oraz dynamicznych* - definiowanie warunkowego wyświetlania pytań. System automatycznie decyduje o ścieżce respondenta na podstawie jego wcześniejszych wyborów
    - *Bezlogowaniowy system dostępu* - zarządzanie uprawnieniami do ankiety poprzez unikalne kody (tokeny), co gwarantuje poufność tożsamości
    - *Warunkowe wyświetlanie pytań* - dynamiczne dostosowywanie formularza do odpowiedzi użytkownika
-   - *Udostępnianie arkuszy w trzech trybach* – publicznym (otwarty link), prywatnym (ograniczona lista odbiorców) oraz zabezpieczonym kodem (wymagane hasło lub token)
-   - *Analizę wyników* – średnie, rozkłady procentowe, najczęstsze odpowiedzi
+   - *Udostępnianie arkuszy w trzech trybach* - publicznym (otwarty link), prywatnym (ograniczona lista odbiorców) oraz zabezpieczonym kodem (wymagane hasło lub token)
+   - *Analizę wyników* - średnie, rozkłady procentowe, najczęstsze odpowiedzi
    - *Automatyzację powiadomień* - system informowania autora o postępach w zbieraniu wyników (powiadomienia e-mail)
 
    #### Cele Biznesowe (KPI)
@@ -68,3 +68,134 @@
    | *Dynamiczne pytania* | Pytania zależne od wcześniejszych odpowiedzi |
    | *Token* | Unikalny kod dostępu do ankiety |
    | *Warunkowe wyświetlanie* | Mechanizm pokazywania pytań w zależności od poprzednich odpowiedzi |
+
+## 2. Opis Ogólny
+
+   ### 2.1. Główne Funkcje Produktu
+
+      - **Tworzenie ankiet** - Intuicyjny kreator formularzy z obsługą różnych typów pytań (otwarte, zamknięte)
+      - **Dynamiczna logika pytań** - Silnik sterujący wyświetlaniem pytań na podstawie wcześniejszych wyborów respondenta
+      - **Anonimowe wypełnianie** - Proces zbierania odpowiedzi bez konieczności rejestracji i identyfikacji użytkownika
+      - **Kontrola dostępu** - Zarządzanie uprawnieniami za pomocą unikalnych tokenów (kodów) oraz linków publicznych/prywatnych
+      - **Analiza wyników** - Moduł generujący statystyki (średnie, rozkłady, najczęstsze odpowiedzi)
+      - **Powiadomienia e-mail** - Automatyczne raporty przesyłane do autora ankiety
+
+   ### 2.2. Klasy Użytkowników i Persony
+
+      #### Twórca Ankiety (Użytkownik Zalogowany)
+
+      **Rola:** Pracownik instytucji lub szkoleniowiec zarządzający procesem badawczym
+
+      **Uprawnienia:**
+      - Projektowanie ankiet
+      - Definiowanie logiki pytań
+      - Generowanie kodów dostępu
+      - Analiza zgromadzonych raportów i statystyk
+
+      **Wymagania:** Wymaga posiadania konta w systemie
+
+      ---
+
+      #### Respondent (Użytkownik Anonimowy)
+
+      **Rola:** Student lub uczestnik szkolenia udzielający odpowiedzi
+
+      **Charakterystyka:** Osoba biorąca udział w badaniu, dla której priorytetem jest szybkość wypełnienia oraz gwarancja prywatności
+
+      **Uprawnienia:**
+      - Dostęp do treści ankiety
+      - Przesyłanie odpowiedzi
+
+      **Wymagania:** Nie posiada konta; dostęp uzyskuje wyłącznie poprzez unikalny token lub link
+
+      ---
+
+      #### Persona 1 - Dr Andrzej Nowak (Twórca Ankiety)
+
+      | Aspekt | Opis |
+      |--------|------|
+      | **Rola** | Wykładowca akademicki |
+      | **Cel** | Szybkie zebranie danych i automatyczne otrzymanie wyników na e-mail |
+      | **Motywacja** | Chce analizować tylko istotne informacje |
+      | **Potrzeby** | • Logika warunkowa pytań (np. pomijanie nieistotnych sekcji)<br>• Automatyczne raporty<br>• Krótkie ankiety dla studentów |
+      | **Opis** | Dr Andrzej Nowak chce sprawnie zbierać opinie studentów. Kluczowe jest dla niego zastosowanie logiki warunkowej (np. „jeśli student nie był na wykładzie, pomiń pytania o materiały"), dzięki czemu ankieta zawiera tylko istotne pytania, a respondenci nie tracą czasu na zbędne pola. |
+
+      #### Persona 2 - Marta Kowalczyk (Szkoleniowiec)
+
+      | Aspekt | Opis |
+      |--------|------|
+      | **Rola** | Trenerka szkoleń |
+      | **Cel** | Ocena satysfakcji uczestników |
+      | **Motywacja** | Szybki dostęp do raportu |
+      | **Potrzeby** | • Brak logowania dla uczestników<br>• Automatyczne podsumowanie wyników<br>• Prosty interfejs |
+      | **Opis** | Marta organizuje szybkie badania satysfakcji po szkoleniach. Potrzebuje narzędzia, które nie wymaga logowania od uczestników, a jej samej pozwala błyskawicznie wygenerować raport końcowy bez ręcznego liczenia głosów. |
+
+      #### Persona 3 - Michał Lewandowski (Respondent - Student)
+
+      | Aspekt | Opis |
+      |--------|------|
+      | **Rola** | Student |
+      | **Cel** | Szybkie i anonimowe wypełnienie ankiety |
+      | **Motywacja** | Prywatność i oszczędność czasu |
+      | **Potrzeby** | • Brak logowania<br>• Krótka ankieta<br>• Pomijanie zbędnych pytań |
+      | **Opis** | Michał chce szybko i anonimowo ocenić zajęcia. Oczekuje, że wypełnianie ankiety potrwa tylko chwilę, ponieważ system pominie zbędne pytania, a brak konieczności logowania zapewni mu pełną swobodę. |
+
+      #### Persona 4 - Sandra Wiśniewska (Respondent - Uczestniczka Kursu)
+
+      | Aspekt | Opis |
+      |--------|------|
+      | **Rola** | Uczestniczka szkolenia |
+      | **Cel** | Udzielenie szczerych odpowiedzi |
+      | **Motywacja** | Pełna anonimowość |
+      | **Potrzeby** | • Gwarancja prywatności<br>• Brak konta<br>• Spersonalizowana ścieżka pytań |
+      | **Opis** | Sandra jest skłonna do szczerych odpowiedzi tylko wtedy, gdy ma 100% pewności, że nikt jej nie zidentyfikuje. Brak konieczności zakładania konta i krótka, spersonalizowana ścieżka pytań sprawiają, że nie porzuca ankiety w połowie. |
+
+   ### 2.3. Ograniczenia Projektowe
+
+      #### 1. Ograniczenia Technologiczne
+
+      **Ograniczenie:** Brak logowania respondentów i brak identyfikatorów użytkowników
+
+      **Źródło:** Wymóg anonimowości, architektura systemu
+
+      **Wpływ na projekt:**
+      - Konieczność stosowania tokenów sesyjnych zamiast kont użytkowników
+      - Utrudnione wykrywanie duplikatów odpowiedzi
+      - Brak możliwości personalizacji ankiet
+      - Ograniczone mechanizmy kontroli dostępu
+
+      #### 2. Ograniczenia Biznesowe
+
+      **Ograniczenie:** Niski budżet utrzymania systemu (model zero-budget)
+
+      **Źródło:** Charakter edukacyjny projektu
+
+      **Wpływ na projekt:**
+      - Konieczność korzystania wyłącznie z darmowych usług hostingowych (np. Render, Oracle Cloud)
+      - Zastosowanie darmowych baz danych (np. MongoDB Atlas, Supabase)
+      - Wykorzystanie technologii open-source
+      - Prosta architektura warstwowa
+      - Brak drogich usług chmurowych
+      - Ograniczona skalowalność w porównaniu do rozwiązań komercyjnych
+
+      #### 3. Ograniczenia Dostępu (Stateless Access Control)
+
+      **Ograniczenie:** System musi obsługiwać dostęp do ankiet bez tworzenia kont i sesji dla respondentów
+
+      **Źródło:** Wymóg biznesowy dotyczący maksymalnego uproszczenia ścieżki respondenta
+
+      **Wpływ na architekturę:**
+      - Wyklucza użycie standardowych systemów zarządzania użytkownikami (np. Spring Security z bazą użytkowników) dla respondentów
+      - Logika sprawdzania uprawnień musi być zaimplementowana na poziomie zasobu (ankiety), a nie sesji zalogowanego użytkownika
+      - Obsługa dwóch trybów dostępu: Link Publiczny lub wspólne hasło do ankiety
+
+      #### 4. Ograniczenia Prawne
+
+      **Ograniczenie:** Zgodność z RODO i ochrona danych osobowych
+
+      **Źródło:** Prawo Unii Europejskiej
+
+      **Wpływ na projekt:**
+      - Brak przechowywania danych osobowych respondentów
+      - Przechowywanie danych wyłącznie na serwerach w UE
+      - Konieczność implementacji mechanizmów ochrony danych
