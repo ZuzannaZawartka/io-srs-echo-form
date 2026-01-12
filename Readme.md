@@ -71,7 +71,33 @@
 
 ## 3. Wymagania Funkcjonalne
 
-### 3.1. Tworzenie Ankiet
+### 3.1. Priorytetyzacja Wymagań
+
+Aby obiektywnie wybrać zakres funkcjonalności dla wersji MVP, zastosowano model priorytetyzacji oparty na wartości, koszcie i ryzyku.
+
+**Wzór:** Priorytet = (Korzyść + Kara) / (Koszt + Ryzyko)
+
+| Funkcja | Korzyść | Kara | Koszt | Ryzyko | Priorytet |
+|---------|---------|------|-------|--------|-----------|
+| Anonimowe wypełnianie | 21 | 21 | 8 | 5 | **3.23** |
+| Dynamiczne pytania | 21 | 13 | 13 | 8 | **1.62** |
+| Tworzenie ankiet | 13 | 13 | 8 | 5 | **2.00** |
+| Raporty | 13 | 8 | 8 | 5 | **1.62** |
+| Powiadomienia e-mail | 8 | 5 | 5 | 3 | **1.62** |
+
+#### Zakres MVP
+
+Na podstawie analizy do wersji MVP zakwalifikowaliśmy:
+
+- **Anonimowe wypełnianie** (priorytet: 3.23)
+- **Tworzenie ankiet** (priorytet: 2.00)
+- **Dynamiczną logikę pytań** (priorytet: 1.62)
+
+Funkcje takie jak **powiadomienia e-mail** oraz **podstawowa analiza wyników** uznaliśmy za opcjonalne i mogą zostać dodane w kolejnych iteracjach rozwoju aplikacji.
+
+---
+
+### 3.2. Tworzenie Ankiet
 
 *Tytuł:* Tworzenie nowej ankiety
 
@@ -109,7 +135,7 @@ aby skutecznie zbierać dane od respondentów.
 
 ---
 
-### 3.2. Dynamiczna Logika Pytań
+### 3.3. Dynamiczna Logika Pytań
 
 *Tytuł:* Warunkowe wyświetlanie pytań
 
@@ -139,7 +165,7 @@ aby respondenci widzieli tylko istotne pytania.
 
 ---
 
-### 3.3. Anonimowe Wypełnianie Ankiety
+### 3.4. Anonimowe Wypełnianie Ankiety
 
 *Tytuł:* Wypełnianie ankiety bez logowania
 
@@ -175,7 +201,7 @@ aby zachować prywatność.
 
 ---
 
-### 3.4. Udostępnianie Ankiet
+### 3.5. Udostępnianie Ankiet
 
 *Tytuł:* Kontrola dostępu do ankiety
 
@@ -203,7 +229,7 @@ aby trafiła do właściwej grupy.
 
 ---
 
-### 3.5. Analiza Wyników
+### 3.6. Analiza Wyników
 
 *Tytuł:* Generowanie raportów
 
@@ -231,7 +257,7 @@ aby analizować wyniki.
 
 ---
 
-### 3.6. Powiadomienia E-mail
+### 3.7. Powiadomienia E-mail
 
 *Tytuł:* Powiadomienia o postępach
 
@@ -250,3 +276,4 @@ aby być na bieżąco z postępami zbierania odpowiedzi.
 - *Given:* Ankieta jest aktywna
 - *When:* Respondent wypełnia i wysyła ankietę
 - *Then:* Autor otrzymuje powiadomienie e-mail z informacją o nowej odpowiedzi
+
