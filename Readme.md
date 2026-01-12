@@ -10,3 +10,15 @@
    **Cel Dokumentu:**
    Głównym zadaniem niniejszej specyfikacji jest szczegółowe określenie wymagań funkcjonalnych i niefunkcjonalnych aplikacji EchoForm, w tym jej funkcji, ograniczeń, założeń projektowych oraz atrybutów jakościowych. Dokument pełni rolę fundamentu do projektowania architektury, implementacji, testowania oraz oceny końcowej projektu w ramach przedmiotu Inżynieria Oprogramowania.
 
+   **Adresaci:**
+   Dokument jest przeznaczony dla:
+
+   - Członków zespołu projektowego, jako wytyczne do prac deweloperskich
+   - Prowadzącego zajęcia, jako podstawa do weryfikacji zakresu i złożoności logicznej projektu
+
+   **Sposób Użycia:**
+   Specyfikacja powinna być wykorzystywana jako:
+
+   - Punkt odniesienia przy implementacji złożonej logiki biznesowej systemu
+   - Kryterium weryfikacji poprawności funkcjonalności podczas fazy testów
+   - Podstawa do oceny zgodności systemu z założonymi celami biznesowymi i technicznymi
