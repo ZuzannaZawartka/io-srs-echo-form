@@ -34,8 +34,8 @@
    - *Tworzenie ankiet statycznych oraz dynamicznych* - definiowanie warunkowego wyświetlania pytań. System automatycznie decyduje o ścieżce respondenta na podstawie jego wcześniejszych wyborów
    - *Bezlogowaniowy system dostępu* - zarządzanie uprawnieniami do ankiety poprzez unikalne kody (tokeny), co gwarantuje poufność tożsamości
    - *Warunkowe wyświetlanie pytań* - dynamiczne dostosowywanie formularza do odpowiedzi użytkownika
-   - *Udostępnianie arkuszy w trzech trybach* – publicznym (otwarty link), prywatnym (ograniczona lista odbiorców) oraz zabezpieczonym kodem (wymagane hasło lub token)
-   - *Analizę wyników* – średnie, rozkłady procentowe, najczęstsze odpowiedzi
+   - *Udostępnianie arkuszy w trzech trybach* - publicznym (otwarty link), prywatnym (ograniczona lista odbiorców) oraz zabezpieczonym kodem (wymagane hasło lub token)
+   - *Analizę wyników* - średnie, rozkłady procentowe, najczęstsze odpowiedzi
    - *Automatyzację powiadomień* - system informowania autora o postępach w zbieraniu wyników (powiadomienia e-mail)
 
    #### Cele Biznesowe (KPI)
@@ -68,4 +68,3 @@
    | *Dynamiczne pytania* | Pytania zależne od wcześniejszych odpowiedzi |
    | *Token* | Unikalny kod dostępu do ankiety |
    | *Warunkowe wyświetlanie* | Mechanizm pokazywania pytań w zależności od poprzednich odpowiedzi |
-   
