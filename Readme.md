@@ -69,6 +69,283 @@
    | Token | Unikalny kod dostępu do ankiety |
    | Warunkowe wyświetlanie | Mechanizm pokazywania pytań w zależności od poprzednich odpowiedzi |
 
+## 2. Opis Ogólny
+
+### 2.1. Główne Funkcje Produktu
+
+- *Tworzenie ankiet* - intuicyjny kreator formularzy z obsługą różnych typów pytań (otwarte, zamknięte)
+- *Dynamiczna logika pytań* - silnik sterujący wyświetlaniem pytań na podstawie wcześniejszych wyborów respondenta
+- *Anonimowe wypełnianie* - proces zbierania odpowiedzi bez konieczności rejestracji i identyfikacji użytkownika
+- *Kontrola dostępu* - zarządzanie uprawnieniami za pomocą unikalnych tokenów (kodów) oraz linków publicznych/prywatnych
+- *Analiza wyników* - moduł generujący statystyki (średnie, rozkłady, najczęstsze odpowiedzi)
+- *Powiadomienia e-mail* - automatyczne raporty przesyłane do autora ankiety
+
+### 2.2. Klasy Użytkowników i Persony
+
+#### Twórca Ankiety (Użytkownik Zalogowany)
+
+*Rola:* Pracownik instytucji lub szkoleniowiec zarządzający procesem badawczym
+
+*Uprawnienia:*
+- Projektowanie ankiet
+- Definiowanie logiki pytań
+- Generowanie kodów dostępu
+- Analiza zgromadzonych raportów i statystyk
+
+*Wymagania:* Wymaga posiadania konta w systemie
+
+---
+
+#### Respondent (Użytkownik Anonimowy)
+
+*Rola:* Student lub uczestnik szkolenia udzielający odpowiedzi
+
+*Charakterystyka:* Osoba biorąca udział w badaniu, dla której priorytetem jest szybkość wypełnienia oraz gwarancja prywatności
+
+*Uprawnienia:*
+- Dostęp do treści ankiety
+- Przesyłanie odpowiedzi
+
+*Wymagania:* Nie posiada konta; dostęp uzyskuje wyłącznie poprzez unikalny token lub link
+
+---
+
+#### Persona 1 - Dr Andrzej Nowak (Twórca Ankiety)
+
+| Aspekt | Opis |
+|--------|------|
+| *Rola* | Wykładowca akademicki |
+| *Cel* | Szybkie zebranie danych i automatyczne otrzymanie wyników na e-mail |
+| *Motywacja* | Chce analizować tylko istotne informacje |
+| *Potrzeby* | • Logika warunkowa pytań (np. pomijanie nieistotnych sekcji)<br>• Automatyczne raporty<br>• Krótkie ankiety dla studentów |
+| *Opis* | Dr Andrzej Nowak chce sprawnie zbierać opinie studentów. Kluczowe jest dla niego zastosowanie logiki warunkowej (np. „jeśli student nie był na wykładzie, pomiń pytania o materiały"), dzięki czemu ankieta zawiera tylko istotne pytania, a respondenci nie tracą czasu na zbędne pola. |
+
+#### Persona 2 - Marta Kowalczyk (Szkoleniowiec)
+
+| Aspekt | Opis |
+|--------|------|
+| *Rola* | Trenerka szkoleń |
+| *Cel* | Ocena satysfakcji uczestników |
+| *Motywacja* | Szybki dostęp do raportu |
+| *Potrzeby* | • Brak logowania dla uczestników<br>• Automatyczne podsumowanie wyników<br>• Prosty interfejs |
+| *Opis* | Marta organizuje szybkie badania satysfakcji po szkoleniach. Potrzebuje narzędzia, które nie wymaga logowania od uczestników, a jej samej pozwala błyskawicznie wygenerować raport końcowy bez ręcznego liczenia głosów. |
+
+#### Persona 3 - Michał Lewandowski (Respondent - Student)
+
+| Aspekt | Opis |
+|--------|------|
+| *Rola* | Student |
+| *Cel* | Szybkie i anonimowe wypełnienie ankiety |
+| *Motywacja* | Prywatność i oszczędność czasu |
+| *Potrzeby* | • Brak logowania<br>• Krótka ankieta<br>• Pomijanie zbędnych pytań |
+| *Opis* | Michał chce szybko i anonimowo ocenić zajęcia. Oczekuje, że wypełnianie ankiety potrwa tylko chwilę, ponieważ system pominie zbędne pytania, a brak konieczności logowania zapewni mu pełną swobodę. |
+
+#### Persona 4 - Sandra Wiśniewska (Respondent - Uczestniczka Kursu)
+
+| Aspekt | Opis |
+|--------|------|
+| *Rola* | Uczestniczka szkolenia |
+| *Cel* | Udzielenie szczerych odpowiedzi |
+| *Motywacja* | Pełna anonimowość |
+| *Potrzeby* | • Gwarancja prywatności<br>• Brak konta<br>• Spersonalizowana ścieżka pytań |
+| *Opis* | Sandra jest skłonna do szczerych odpowiedzi tylko wtedy, gdy ma 100% pewności, że nikt jej nie zidentyfikuje. Brak konieczności zakładania konta i krótka, spersonalizowana ścieżka pytań sprawiają, że nie porzuca ankiety w połowie. |
+
+### 2.3. Ograniczenia Projektowe
+
+#### 1. Ograniczenia Technologiczne
+
+*Ograniczenie:* Brak logowania respondentów i brak identyfikatorów użytkowników
+
+*Źródło:* Wymóg anonimowości, architektura systemu
+
+*Wpływ na projekt:*
+- Konieczność stosowania tokenów sesyjnych zamiast kont użytkowników
+- Utrudnione wykrywanie duplikatów odpowiedzi
+- Brak możliwości personalizacji ankiet
+- Ograniczone mechanizmy kontroli dostępu
+
+#### 2. Ograniczenia Biznesowe
+
+*Ograniczenie:* Niski budżet utrzymania systemu (model zero-budget)
+
+*Źródło:* Charakter edukacyjny projektu
+
+*Wpływ na projekt:*
+- Konieczność korzystania wyłącznie z darmowych usług hostingowych (np. Render, Oracle Cloud)
+- Zastosowanie darmowych baz danych (np. MongoDB Atlas, Supabase)
+- Wykorzystanie technologii open-source
+- Prosta architektura warstwowa
+- Brak drogich usług chmurowych
+- Ograniczona skalowalność w porównaniu do rozwiązań komercyjnych
+
+#### 3. Ograniczenia Dostępu (Stateless Access Control)
+
+*Ograniczenie:* System musi obsługiwać dostęp do ankiet bez tworzenia kont i sesji dla respondentów
+
+*Źródło:* Wymóg biznesowy dotyczący maksymalnego uproszczenia ścieżki respondenta
+
+*Wpływ na architekturę:*
+- Wyklucza użycie standardowych systemów zarządzania użytkownikami (np. Spring Security z bazą użytkowników) dla respondentów
+- Logika sprawdzania uprawnień musi być zaimplementowana na poziomie zasobu (ankiety), a nie sesji zalogowanego użytkownika
+- Obsługa dwóch trybów dostępu: Link Publiczny lub wspólne hasło do ankiety
+
+#### 4. Ograniczenia Prawne
+
+*Ograniczenie:* Zgodność z RODO i ochrona danych osobowych
+
+*Źródło:* Prawo Unii Europejskiej
+
+*Wpływ na projekt:*
+- Brak przechowywania danych osobowych respondentów
+- Przechowywanie danych wyłącznie na serwerach w UE
+- Konieczność implementacji mechanizmów ochrony danych
+
+### 2.4. Założenia Projektowe
+
+#### Założenie 1 - Mechanizm dynamicznych pytań
+
+*Założenie:* Mechanizm dynamicznych pytań pozostaje stabilny i poprawny nawet w złożonych ankietach.
+
+*Ryzyko:* Błędna logika może pominąć kluczowe sekcje lub zadać nieprawidłowe pytania, co frustruje respondentów i obniża jakość danych.
+
+*Plan walidacji:*
+- *Co:* Testy poprawności logiki warunkowej.
+- *Jak:* Ankiety testowe z różnymi scenariuszami odpowiedzi; weryfikacja prezentowanych pytań.
+- *Kiedy:* Pierwszy sprint implementacyjny.
+- *Kto:* Programiści i testerzy.
+
+#### Założenie 2 - Mechanizm anonimowej sesji
+
+*Założenie:* Mechanizm anonimowej sesji (token w przeglądarce lub sesja serwera) pozwala wznawiać ankietę po zamknięciu karty bez naruszania anonimowości.
+
+*Ryzyko:* Niestabilna sesja (szybki timeout, utrata tokenu) powoduje utratę postępu i spadek wskaźnika ukończenia ankiet, co uderza w cel biznesowy.
+
+*Plan walidacji:*
+- *Co:* Poprawność wznawiania anonimowej ankiety.
+- *Jak:* Testy manualne i automatyczne z zamykaniem/otwieraniem ankiety na różnych etapach.
+- *Kiedy:* Na etapie implementacji MVP, przed testami użyteczności.
+- *Kto:* Zespół deweloperski.
+
+#### Założenie 3 - Wydajność systemu
+
+*Założenie:* System reaguje w czasie < 1 s na otwarcie pytania nawet przy dużej liczbie respondentów.
+
+*Ryzyko:* Wolne odpowiedzi mogą zniechęcać użytkowników, zwiększając liczbę porzuconych ankiet i spadające KPI.
+
+*Plan walidacji:*
+- *Co:* Pomiar czasu odpowiedzi backendu i UI.
+- *Jak:* Testy wydajnościowe i symulacja wielu równoczesnych użytkowników.
+- *Kiedy:* Po implementacji krytycznych funkcjonalności ankiety.
+- *Kto:* Programiści i testerzy.
+
+#### Założenie 4 - Bezpieczeństwo danych
+
+*Założenie:* Dane respondentów są przechowywane i przesyłane w sposób bezpieczny (szyfrowanie w transporcie i w bazie).
+
+*Ryzyko:* Naruszenie danych lub brak zgodności z RODO może prowadzić do strat finansowych i reputacyjnych.
+
+*Plan walidacji:*
+- *Co:* Testy bezpieczeństwa i audyty danych.
+- *Jak:* Testy penetracyjne, walidacja szyfrowania danych w transporcie i w spoczynku.
+- *Kiedy:* Przed uruchomieniem produkcyjnym.
+- *Kto:* Zespół deweloperski i specjalista ds. bezpieczeństwa.
+
+#### Założenie 5 - Skalowalność
+
+*Założenie:* System obsłuży jednocześnie dużą liczbę respondentów bez spadku wydajności.
+
+*Ryzyko:* Duże obciążenie serwera może prowadzić do błędów i niedostępności ankiet.
+
+*Plan walidacji:*
+- *Co:* Testy obciążeniowe i stress-testy.
+- *Jak:* Symulacja wielu jednoczesnych użytkowników, monitorowanie czasu odpowiedzi i stabilności.
+- *Kiedy:* W fazie testów integracyjnych.
+- *Kto:* Testerzy i architekt systemu.
+
+#### Założenie 6 - Poprawność raportowania
+
+*Założenie:* Raporty i statystyki są generowane poprawnie, zgodnie z udzielonymi odpowiedziami.
+
+*Ryzyko:* Błędy w raportach prowadzą do błędnych wniosków i decyzji biznesowych.
+
+*Plan walidacji:*
+- *Co:* Testy poprawności generowania raportów.
+- *Jak:* Porównanie wyników raportów z ręcznie wprowadzonymi testowymi odpowiedziami.
+- *Kiedy:* Po zebraniu pierwszych danych testowych.
+- *Kto:* Testerzy i twórca raportów.
+
+#### Założenie 7 - Dostępność i niezawodność
+
+*Założenie:* System jest dostępny 24/7 i błędy krytyczne są minimalizowane.
+
+*Ryzyko:* Niedostępność ankiet może zniechęcać użytkowników i spowodować utratę danych.
+
+*Plan walidacji:*
+- *Co:* Monitorowanie uptime’u i testy awaryjne.
+- *Jak:* Symulacja awarii i automatyczne alerty.
+- *Kiedy:* Przed produkcyjnym uruchomieniem i w trakcie monitorowania.
+- *Kto:* Zespół DevOps i testerzy.
+
+#### Założenie 8 - Podgląd ankiety
+
+*Założenie:* Twórca ankiety może wyświetlić ankietę w trybie podglądu identycznym z widokiem respondenta, bez zapisywania odpowiedzi.
+
+*Ryzyko:* Brak możliwości podglądu może prowadzić do błędów w logice pytań lub literówek w ankietach.
+
+*Plan walidacji:*
+- *Co:* Testy podglądu ankiety.
+- *Jak:* Twórca ankiety używa trybu podglądu; weryfikacja poprawności wyświetlania pytań i logiki warunkowej.
+- *Kiedy:* Po implementacji kreatora ankiet.
+- *Kto:* Programiści i testerzy.
+
+#### Założenie 9 - Powiadomienia e-mail
+
+*Założenie:* System wysyła powiadomienia e-mail do twórcy ankiety po otrzymaniu nowych odpowiedzi.
+
+*Ryzyko:* Brak powiadomień może spowodować opóźnienie w analizie wyników lub pominięcie danych.
+
+*Plan walidacji:*
+- *Co:* Testy wysyłki powiadomień.
+- *Jak:* Wypełnienie ankiety testowej; sprawdzenie odbioru e-maila.
+- *Kiedy:* Po implementacji mechanizmu powiadomień.
+- *Kto:* Testerzy i programiści.
+
+#### Założenie 10 - Kopie zapasowe danych
+
+*Założenie:* Wszystkie odpowiedzi i ankiety są regularnie backupowane.
+
+*Ryzyko:* Utrata danych w wyniku awarii serwera może prowadzić do nieodwracalnych strat informacji.
+
+*Plan walidacji:*
+- *Co:* Testy przywracania danych z kopii zapasowej.
+- *Jak:* Symulacja awarii i odtworzenie danych.
+- *Kiedy:* Na etapie konfiguracji środowiska produkcyjnego i testowego.
+- *Kto:* Zespół DevOps i testerzy.
+
+#### Założenie 11 - Zgodność przeglądarek
+
+*Założenie:* System działa poprawnie na najpopularniejszych przeglądarkach (Chrome, Firefox, Edge, Safari).
+
+*Ryzyko:* Błędy w działaniu ankiety w wybranych przeglądarkach mogą zniechęcać respondentów i obniżać wskaźniki ukończenia.
+
+*Plan walidacji:*
+- *Co:* Testy kompatybilności przeglądarek.
+- *Jak:* Wypełnianie ankiety testowej na każdej przeglądarce.
+- *Kiedy:* Po implementacji interfejsu użytkownika.
+- *Kto:* Testerzy i frontend developerzy.
+
+#### Założenie 12 - Rozszerzalność systemu
+
+*Założenie:* System pozwala na łatwe dodawanie nowych typów pytań i funkcjonalności w przyszłości.
+
+*Ryzyko:* Brak modularności może powodować wysokie koszty wprowadzania nowych funkcji lub modyfikacji ankiet.
+
+*Plan walidacji:*
+- *Co:* Testy dodawania nowych typów pytań.
+- *Jak:* Tworzenie ankiety z nowym typem pytania w środowisku testowym.
+- *Kiedy:* Po implementacji podstawowego kreatora ankiet.
+- *Kto:* Programiści i testerzy.
+
 ## 3. Wymagania Funkcjonalne
 
 ### 3.1. Priorytetyzacja Wymagań
