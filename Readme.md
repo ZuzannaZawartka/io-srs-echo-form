@@ -640,16 +640,16 @@ aby sprawdzić poprawność pytań i logiki warunkowej.
 
 ## 4. Atrybuty Jakościowe
 
-| Kategoria | Atrybut | Opis |
-|-----------|---------|------|
-| Jakość wykonania | Użyteczność (Usability) | Intuicyjność i prostota obsługi systemu dla użytkownika |
-| Jakość wykonania | Niezawodność (Reliability) | Jak często system działa poprawnie bez błędów |
-| Jakość wykonania | Wydajność (Performance) | Jak szybko system reaguje na działania użytkownika |
-| Jakość wykonania | Bezpieczeństwo (Security) | Jak system chroni dane przed nieautoryzowanym dostępem |
-| Jakość wykonania | Dostępność (Availability) | Jak często system jest dostępny dla użytkowników |
-| Jakość projektu  | Modyfikowalność (Modifiability) | Łatwość wprowadzania zmian w systemie |
-| Jakość projektu  | Testowalność (Testability) | Łatwość testowania systemu |
-| Jakość projektu  | Przenośność (Portability) | Łatwość przeniesienia systemu na inne środowisko |
+| Kategoria | Atrybut | Opis | Uzasadnienie |
+|-----------|---------|------|--------------|
+| Jakość wykonania | Użyteczność (Usability) | Intuicyjność i prostota obsługi systemu dla użytkownika | Kluczowy dla wysokiego wskaźnika ukończenia ankiet (KPI) |
+| Jakość wykonania | Niezawodność (Reliability) | Jak często system działa poprawnie bez błędów | Błędy w logice dynamicznej prowadzą do porzucania ankiet |
+| Jakość wykonania | Wydajność (Performance) | Jak szybko system reaguje na działania użytkownika | Wolne działanie zwiększa frustrację użytkowników |
+| Jakość wykonania | Bezpieczeństwo (Security) | Jak system chroni dane przed nieautoryzowanym dostępem | Ochrona prywatnych danych respondentów i zgodność z regulacjami |
+| Jakość wykonania | Dostępność (Availability) | Jak często system jest dostępny dla użytkowników | Respondenci mogą wypełniać ankiety w dowolnym momencie, bez utraty danych |
+| Jakość projektu  | Modyfikowalność (Modifiability) | Łatwość wprowadzania zmian w systemie | Możliwość szybkiego dostosowania ankiet do zmieniających się wymagań biznesowych |
+| Jakość projektu  | Testowalność (Testability) | Łatwość testowania systemu | Zapewnia, że zmiany w systemie nie wprowadzają błędów, podnosi jakość oprogramowania |
+| Jakość projektu  | Przenośność (Portability) | Łatwość przeniesienia systemu na inne środowisko | System może działać na różnych platformach, zwiększając jego zasięg i skalowalność |
 
 ### 4.1. Priorytetyzacja Wymagań Jakościowych
 
