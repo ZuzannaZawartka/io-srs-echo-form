@@ -126,13 +126,25 @@ aby skutecznie zbierać dane od respondentów.
 - *Then:* Ankieta zostaje zapisana w systemie
 - *And:* System generuje unikalny publiczny link do ankiety
 
-#### WF-ANK-02: Brak tytułu ankiety (Scenariusz alternatywny)
+#### WF-ANK-02: Brak tytułu ankiety (Scenariusz walidacji danych)
 
 - *Given:* Jestem zalogowanym twórcą ankiety i znajduję się w kreatorze ankiet
 - *When:* Próbuję zapisać ankietę bez podania tytułu
 - *Then:* System wyświetla komunikat o błędzie informujący o konieczności podania tytułu ankiety
 - *And:* Ankieta nie zostaje zapisana w systemie
 
+#### WF-ANK-03: Brak pytań w ankiecie (Scenariusz walidacji danych)
+
+- *Given:* Jestem zalogowanym twórcą ankiety
+- *When:* Próbuję zapisać ankietę bez dodania żadnego pytania
+- *Then:* System wyświetla komunikat o konieczności dodania co najmniej jednego pytania
+- *And:* Ankieta nie zostaje zapisana
+
+#### WF-ANK-04: Edycja istniejącej ankiety (Scenariusz rozszerzony)
+
+- *Given:* Jestem twórcą ankiety i posiadam zapisaną ankietę
+- *When:* Edytuję tytuł lub pytania i zapisuję zmiany
+- *Then:* System aktualizuje ankietę w systemie
 ---
 
 ### 3.3. Dynamiczna Logika Pytań
@@ -163,6 +175,11 @@ aby respondenci widzieli tylko istotne pytania.
 - *When:* Respondent udziela odpowiedzi
 - *Then:* System wyświetla właściwe kolejne pytanie, logicznie pasujące do poprzedniego
 
+#### WF-DYN-02: Błędnie skonfigurowana logika (Scenariusz błędu konfiguracji)
+
+- *Given:* Twórca ankiety definiuje sprzeczne reguły warunkowe
+- *When:* Próbuje zapisać ankietę
+- *Then:* System informuje o błędzie w logice pytań
 ---
 
 ### 3.4. Anonimowe Wypełnianie Ankiety
@@ -193,12 +210,23 @@ aby zachować prywatność.
 - *When:* Otwieram ankietę
 - *Then:* Mogę ją wypełnić
 
-#### WF-ANO-02: Niepoprawny token (Scenariusz alternatywny)
+#### WF-ANO-02: Niepoprawny token (Scenariusz bezpieczeństwa)
 
 - *Given:* Token jest nieprawidłowy
 - *When:* Próbuję otworzyć ankietę
 - *Then:* System blokuje dostęp
 
+#### WF-ANO-03: Próba wielokrotnego wypełnienia ankiety (Scenariusz zabezpieczenia przed nadużyciem)
+
+- *Given:* Respondent już wypełnił ankietę
+- *When:* Próbuje wypełnić ją ponownie z tego samego tokenu
+- *Then:* System blokuje możliwość ponownego wypełnienia
+
+#### WF-ANO-04: Wygaśnięcie linku (Scenariusz bezpieczeństwa)
+
+- *Given:* Link do ankiety wygasł
+- *When:* Respondent próbuje go otworzyć
+- *Then:* System wyświetla informację o nieaktywnej ankiecie
 ---
 
 ### 3.5. Udostępnianie Ankiet
@@ -221,12 +249,23 @@ aby trafiła do właściwej grupy.
 - *When:* Udostępniam link
 - *Then:* Każdy ma dostęp
 
-#### WF-ACC-02: Tryb z kodem (Scenariusz alternatywny)
+#### WF-ACC-02: Tryb z kodem (Scenariusz wariantowy)
 
 - *Given:* Ankieta wymaga kodu
 - *When:* Respondent wpisuje poprawny kod
 - *Then:* Uzyskuje dostęp do ankiety
 
+#### WF-ACC-03: Tryb prywatny (Scenariusz ograniczonego dostępu)
+
+- *Given:* Ankieta jest ustawiona jako prywatna
+- *When:* Osoba nieuprawniona próbuje otworzyć link
+- *Then:* System odmawia dostępu
+
+#### WF-ACC-04: Błędny kod dostępu (Scenariusz błędu autoryzacji)
+
+- *Given:* Ankieta wymaga kodu
+- *When:* Respondent wpisuje niepoprawny kod
+- *Then:* System wyświetla komunikat o błędnym kodzie
 ---
 
 ### 3.6. Analiza Wyników
@@ -249,12 +288,17 @@ aby analizować wyniki.
 - *When:* Otwieram raport
 - *Then:* Widzę statystyki (średnie, rozkłady, najczęstsze odpowiedzi)
 
-#### WF-RAP-02: Brak odpowiedzi (Scenariusz alternatywny)
+#### WF-RAP-02: Brak odpowiedzi (Scenariusz braku danych)
 
 - *Given:* Ankieta jest pusta (brak odpowiedzi)
 - *When:* Otwieram raport
 - *Then:* System informuje o braku danych
 
+#### WF-RAP-03: Brak uprawnień do raportu (Scenariusz kontroli dostępu)
+
+- *Given:* Użytkownik nie jest autorem ankiety
+- *When:* Próbuje otworzyć raport
+- *Then:* System blokuje dostęp do wyników
 ---
 
 ### 3.7. Powiadomienia E-mail
@@ -276,4 +320,43 @@ aby być na bieżąco z postępami zbierania odpowiedzi.
 - *Given:* Ankieta jest aktywna
 - *When:* Respondent wypełnia i wysyła ankietę
 - *Then:* Autor otrzymuje powiadomienie e-mail z informacją o nowej odpowiedzi
+
+### 3.8. Podgląd Ankiety
+
+*Tytuł:* Podgląd ankiety przed udostępnieniem
+
+*Opis:* System umożliwia twórcy ankiety wyświetlenie ankiety w trybie podglądu, identycznym z widokiem respondenta, bez zapisywania odpowiedzi.
+
+*Historyjka Użytkownika:*
+Jako Twórca Ankiety,
+chcę móc podejrzeć ankietę przed jej udostępnieniem,
+aby sprawdzić poprawność pytań i logiki warunkowej.
+
+
+*Kryteria akceptacji:*
+
+#### WF-POD-01: Podgląd ankiety (Scenariusz główny)
+
+- *Given:* Jestem zalogowanym twórcą ankiety
+- *When:* Wybieram opcję „Podgląd ankiety”
+- *Then:* System wyświetla ankietę w trybie respondenta
+- *And:* Odpowiedzi udzielone w podglądzie nie są zapisywane
+
+#### WF-POD-02: Podgląd ankiety z logiką warunkową (Scenariusz rozszerzony)
+
+- *Given:* Jestem zalogowanym twórcą ankiety, a ankieta zawiera pytania warunkowe
+- *When:* Korzystam z podglądu ankiety i udzielam przykładowych odpowiedzi
+- *Then:* System wyświetla kolejne pytania zgodnie ze zdefiniowaną logiką warunkową
+
+#### WF-POD-03: Podgląd ankiety w wersji roboczej (Scenariusz wariantowy)
+
+- *Given:* Jestem zalogowanym twórcą ankiety, a ankieta jest zapisana jako wersja robocza
+- *When:* Wybieram opcję „Podgląd ankiety”
+- *Then:* System umożliwia podgląd ankiety bez konieczności jej publikowania
+
+#### WF-POD-04: Brak uprawnień do podglądu ankiety (Scenariusz kontroli dostępu)
+
+- *Given:* Jestem zalogowanym użytkownikiem, który nie jest autorem ankiety
+- *When:* Próbuję wyświetlić podgląd ankiety
+- *Then:* System blokuje dostęp do podglądu ankiety
 
