@@ -225,3 +225,123 @@ System umożliwia:
 - *Jak:* Testy manualne i automatyczne z zamykaniem/otwieraniem ankiety na różnych etapach.
 - *Kiedy:* Na etapie implementacji MVP, przed testami użyteczności.
 - *Kto:* Zespół deweloperski.
+
+#### Założenie 3 - Wydajność systemu
+
+*Założenie:* System reaguje w czasie < 1 s na otwarcie pytania nawet przy dużej liczbie respondentów.
+
+*Ryzyko:* Wolne odpowiedzi mogą zniechęcać użytkowników, zwiększając liczbę porzuconych ankiet i spadające KPI.
+
+*Plan walidacji:*
+- *Co:* Pomiar czasu odpowiedzi backendu i UI.
+- *Jak:* Testy wydajnościowe i symulacja wielu równoczesnych użytkowników.
+- *Kiedy:* Po implementacji krytycznych funkcjonalności ankiety.
+- *Kto:* Programiści i testerzy.
+
+#### Założenie 4 - Bezpieczeństwo danych
+
+*Założenie:* Dane respondentów są przechowywane i przesyłane w sposób bezpieczny (szyfrowanie w transporcie i w bazie).
+
+*Ryzyko:* Naruszenie danych lub brak zgodności z RODO może prowadzić do strat finansowych i reputacyjnych.
+
+*Plan walidacji:*
+- *Co:* Testy bezpieczeństwa i audyty danych.
+- *Jak:* Testy penetracyjne, walidacja szyfrowania danych w transporcie i w spoczynku.
+- *Kiedy:* Przed uruchomieniem produkcyjnym.
+- *Kto:* Zespół deweloperski i specjalista ds. bezpieczeństwa.
+
+#### Założenie 5 - Skalowalność
+
+*Założenie:* System obsłuży jednocześnie dużą liczbę respondentów bez spadku wydajności.
+
+*Ryzyko:* Duże obciążenie serwera może prowadzić do błędów i niedostępności ankiet.
+
+*Plan walidacji:*
+- *Co:* Testy obciążeniowe i stress-testy.
+- *Jak:* Symulacja wielu jednoczesnych użytkowników, monitorowanie czasu odpowiedzi i stabilności.
+- *Kiedy:* W fazie testów integracyjnych.
+- *Kto:* Testerzy i architekt systemu.
+
+#### Założenie 6 - Poprawność raportowania
+
+*Założenie:* Raporty i statystyki są generowane poprawnie, zgodnie z udzielonymi odpowiedziami.
+
+*Ryzyko:* Błędy w raportach prowadzą do błędnych wniosków i decyzji biznesowych.
+
+*Plan walidacji:*
+- *Co:* Testy poprawności generowania raportów.
+- *Jak:* Porównanie wyników raportów z ręcznie wprowadzonymi testowymi odpowiedziami.
+- *Kiedy:* Po zebraniu pierwszych danych testowych.
+- *Kto:* Testerzy i twórca raportów.
+
+#### Założenie 7 - Dostępność i niezawodność
+
+*Założenie:* System jest dostępny 24/7 i błędy krytyczne są minimalizowane.
+
+*Ryzyko:* Niedostępność ankiet może zniechęcać użytkowników i spowodować utratę danych.
+
+*Plan walidacji:*
+- *Co:* Monitorowanie uptime’u i testy awaryjne.
+- *Jak:* Symulacja awarii i automatyczne alerty.
+- *Kiedy:* Przed produkcyjnym uruchomieniem i w trakcie monitorowania.
+- *Kto:* Zespół DevOps i testerzy.
+
+#### Założenie 8 - Podgląd ankiety
+
+*Założenie:* Twórca ankiety może wyświetlić ankietę w trybie podglądu identycznym z widokiem respondenta, bez zapisywania odpowiedzi.
+
+*Ryzyko:* Brak możliwości podglądu może prowadzić do błędów w logice pytań lub literówek w ankietach.
+
+*Plan walidacji:*
+- *Co:* Testy podglądu ankiety.
+- *Jak:* Twórca ankiety używa trybu podglądu; weryfikacja poprawności wyświetlania pytań i logiki warunkowej.
+- *Kiedy:* Po implementacji kreatora ankiet.
+- *Kto:* Programiści i testerzy.
+
+#### Założenie 9 - Powiadomienia e-mail
+
+*Założenie:* System wysyła powiadomienia e-mail do twórcy ankiety po otrzymaniu nowych odpowiedzi.
+
+*Ryzyko:* Brak powiadomień może spowodować opóźnienie w analizie wyników lub pominięcie danych.
+
+*Plan walidacji:*
+- *Co:* Testy wysyłki powiadomień.
+- *Jak:* Wypełnienie ankiety testowej; sprawdzenie odbioru e-maila.
+- *Kiedy:* Po implementacji mechanizmu powiadomień.
+- *Kto:* Testerzy i programiści.
+
+#### Założenie 10 - Kopie zapasowe danych
+
+*Założenie:* Wszystkie odpowiedzi i ankiety są regularnie backupowane.
+
+*Ryzyko:* Utrata danych w wyniku awarii serwera może prowadzić do nieodwracalnych strat informacji.
+
+*Plan walidacji:*
+- *Co:* Testy przywracania danych z kopii zapasowej.
+- *Jak:* Symulacja awarii i odtworzenie danych.
+- *Kiedy:* Na etapie konfiguracji środowiska produkcyjnego i testowego.
+- *Kto:* Zespół DevOps i testerzy.
+
+#### Założenie 11 - Zgodność przeglądarek
+
+*Założenie:* System działa poprawnie na najpopularniejszych przeglądarkach (Chrome, Firefox, Edge, Safari).
+
+*Ryzyko:* Błędy w działaniu ankiety w wybranych przeglądarkach mogą zniechęcać respondentów i obniżać wskaźniki ukończenia.
+
+*Plan walidacji:*
+- *Co:* Testy kompatybilności przeglądarek.
+- *Jak:* Wypełnianie ankiety testowej na każdej przeglądarce.
+- *Kiedy:* Po implementacji interfejsu użytkownika.
+- *Kto:* Testerzy i frontend developerzy.
+
+#### Założenie 12 - Rozszerzalność systemu
+
+*Założenie:* System pozwala na łatwe dodawanie nowych typów pytań i funkcjonalności w przyszłości.
+
+*Ryzyko:* Brak modularności może powodować wysokie koszty wprowadzania nowych funkcji lub modyfikacji ankiet.
+
+*Plan walidacji:*
+- *Co:* Testy dodawania nowych typów pytań.
+- *Jak:* Tworzenie ankiety z nowym typem pytania w środowisku testowym.
+- *Kiedy:* Po implementacji podstawowego kreatora ankiet.
+- *Kto:* Programiści i testerzy.
