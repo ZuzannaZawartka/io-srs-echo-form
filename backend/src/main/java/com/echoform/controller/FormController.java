@@ -43,4 +43,21 @@ public class FormController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    
+    @PostMapping("/{id}/public-link")
+    public ResponseEntity<Form> generatePublicLink(@PathVariable Long id) {
+        try {
+            Form form = formService.generatePublicLink(id);
+            return ResponseEntity.ok(form);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @GetMapping("/link/{publicLink}")
+    public ResponseEntity<Form> getFormByPublicLink(@PathVariable String publicLink) {
+        return formService.getFormByPublicLink(publicLink)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

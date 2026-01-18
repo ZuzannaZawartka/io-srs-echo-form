@@ -35,6 +35,20 @@ public class FormService {
         return formRepository.findByPublicLink(publicLink);
     }
     
+    @Transactional
+    public Form generatePublicLink(Long formId) {
+        Form form = formRepository.findById(formId)
+                .orElseThrow(() -> new RuntimeException("Form not found"));
+        
+        String publicLink = generateUniqueLink();
+        form.setPublicLink(publicLink);
+        return formRepository.save(form);
+    }
+    
+    private String generateUniqueLink() {
+        return java.util.UUID.randomUUID().toString().replace("-", "");
+    }
+    
     private String getDefaultFormContent() {
         return """
             {
