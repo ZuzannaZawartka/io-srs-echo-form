@@ -1,0 +1,5 @@
+@baseUrl = http://localhost:8080
+
+### Generate public link for form
+POST {{baseUrl}}/api/forms/1/public-link
+
