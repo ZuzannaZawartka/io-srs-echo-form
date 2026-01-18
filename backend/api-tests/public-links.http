@@ -3,3 +3,5 @@
 ### Generate public link for form
 POST {{baseUrl}}/api/forms/1/public-link
 
+### Get form by public link (copy link from previous response)
+GET {{baseUrl}}/api/forms/link/888b4a82dc0341e899cfd5a3aef2b71a
