@@ -12,6 +12,14 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: false
+
+echoform:
+  token:
+    default-expiry-minutes: 60
+    min-expiry-minutes: 1
+    max-expiry-days: 7
+  session:
+    duration-minutes: 10
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
