@@ -1,5 +1,6 @@
 package com.echoform.service;
 
+import com.echoform.exception.FormNotFoundException;
 import com.echoform.model.Form;
 import com.echoform.repository.FormRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,7 @@ public class FormService {
     @Transactional
     public Form generatePublicLink(Long formId) {
         Form form = formRepository.findById(formId)
-                .orElseThrow(() -> new RuntimeException("Form not found"));
+                .orElseThrow(() -> new FormNotFoundException(formId));
         
         String publicLink = generateUniqueLink();
         form.setPublicLink(publicLink);
