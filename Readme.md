@@ -708,3 +708,74 @@ Wybrano trzy kluczowe atrybuty jakościowe dla MVP:
   Kompromisy:  
   - Pozytyw: Szybka reakcja systemu  
   - Negatyw: Wyższy koszt infrastruktury, ryzyko nieaktualnych danych
+
+## 5. Odkrywanie i Analiza Wymagań
+
+### 5.1. Analiza Porównawcza
+
+#### Krok 1: Identyfikacja konkurencji i wzorców
+W celu przeprowadzenia analizy porównawczej zidentyfikowano następujące grupy rozwiązań:
+
+* *Konkurencja bezpośrednia (platformy ankietowe):*
+    * Google Forms
+    * SurveyMonkey
+    * Microsoft Forms
+* *Konkurencja pośrednia:*
+    * Systemy ankietowe uczelni (np. wewnętrzne ankiety ewaluacyjne)
+    * Narzędzia do badań satysfakcji klientów
+* *Wzorce funkcjonalne:*
+    * Systemy zbierania opinii online
+    * Formularze rekrutacyjne z logiką warunkową
+    * Ankiety ewaluacyjne po szkoleniach
+
+#### Krok 2: Zdefiniowanie kryteriów oceny
+Do porównania wybrano następujące kryteria:
+
+| Kryterium | Opis |
+| :--- | :--- |
+| *Anonimowość* | Stopień ochrony prywatności |
+| *Logika dynamiczna* | Obsługa warunkowych pytań |
+| *Model dostępu* | Czy wymagane jest logowanie |
+| *Raportowanie* | Jakość analiz i statystyk |
+| *UX (User Experience)* | Intuicyjność i prostota obsługi |
+| *Koszt* | Dostępność darmowej wersji |
+
+#### Krok 3: Synteza wyników
+
+| System | Anonimowość | Logika dynamiczna | Logowanie | Raporty | UX | Koszt |
+| :--- | :---: | :---: | :---: | :--- | :--- | :--- |
+| *Google Forms* | ! | - | + | Podstawowe | Dobre | Darmowe |
+| *SurveyMonkey* | ! | ! | + | Zaawansowane | Dobre | Płatne |
+| *Microsoft Forms* | ! | - | + | Podstawowe | Dobre | Darmowe |
+| *EchoForm* | + | + | - | Automatyczne | Proste | Darmowe |
+
+**Legenda:** + - Atut/Tak; - - Brak/Nie; ! - Ograniczone/Warunkowe.
+
+
+#### Wnioski:
+
+*Co konkurencja robi dobrze:*
+* Stabilne interfejsy użytkownika
+* Integracja z innymi usługami
+* Rozbudowane raporty
+
+*Słabe strony konkurencji:*
+* Wymaganie logowania
+* Ograniczona anonimowość
+* Brak pełnej logiki warunkowej
+* Płatne funkcje premium
+
+*Unikalne cechy EchoForm:*
+* Brak logowania dla respondentów
+* Pełna anonimowość
+* Dynamiczne pytania (if/then)
+* Automatyczne raporty e-mail
+* Skupienie na prostocie
+
+#### Wpływ analizy na wymagania SRS
+Na podstawie analizy porównawczej:
+1.  Zdecydowano o rezygnacji z logowania dla respondentów.
+2.  Wprowadzono dynamiczną logikę pytań jako kluczową funkcję.
+3.  Skupiono się na prostocie interfejsu.
+4.  Zaplanowano automatyczne raporty.
+5.  Ograniczono funkcje do MVP, aby zachować niski koszt.
