@@ -15,6 +15,7 @@ import java.util.Optional;
 public class FormService {
     
     private final FormRepository formRepository;
+    private final com.fasterxml.jackson.databind.ObjectMapper objectMapper;
     
     @Transactional
     public Form createForm(String title, String content) {
@@ -50,33 +51,36 @@ public class FormService {
         return java.util.UUID.randomUUID().toString().replace("-", "");
     }
     
+    @lombok.SneakyThrows
     private String getDefaultFormContent() {
-        return """
-            {
-              "title": "Default Feedback Form",
-              "description": "Standard feedback questionnaire",
-              "questions": [
-                {
-                  "id": 1,
-                  "text": "Rate your experience",
-                  "type": "single_choice",
-                  "required": true,
-                  "options": ["5 - Excellent", "4 - Good", "3 - Average", "2 - Below Average", "1 - Poor"]
-                },
-                {
-                  "id": 2,
-                  "text": "What did you like most?",
-                  "type": "text",
-                  "required": false
-                },
-                {
-                  "id": 3,
-                  "text": "Would you participate again?",
-                  "type": "boolean",
-                  "required": true
-                }
-              ]
-            }
-            """;
+        var question1 = java.util.Map.of(
+            "id", 1,
+            "text", "Rate your experience",
+            "type", "single_choice",
+            "required", true,
+            "options", java.util.List.of("5 - Excellent", "4 - Good", "3 - Average", "2 - Below Average", "1 - Poor")
+        );
+        
+        var question2 = java.util.Map.of(
+            "id", 2,
+            "text", "What did you like most?",
+            "type", "text",
+            "required", false
+        );
+        
+        var question3 = java.util.Map.of(
+            "id", 3,
+            "text", "Would you participate again?",
+            "type", "boolean",
+            "required", true
+        );
+        
+        var formContent = java.util.Map.of(
+            "title", "Default Feedback Form",
+            "description", "Standard feedback questionnaire",
+            "questions", java.util.List.of(question1, question2, question3)
+        );
+        
+        return objectMapper.writeValueAsString(formContent);
     }
 }
