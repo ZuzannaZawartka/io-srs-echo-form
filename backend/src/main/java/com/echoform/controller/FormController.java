@@ -1,14 +1,17 @@
 package com.echoform.controller;
 
+import com.echoform.dto.mapper.DtoMapper;
+import com.echoform.dto.request.FormCreateRequest;
+import com.echoform.dto.response.FormResponse;
 import com.echoform.model.Form;
 import com.echoform.service.FormService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/forms")
@@ -19,44 +22,37 @@ public class FormController {
     private final FormService formService;
     
     @PostMapping
-    public ResponseEntity<Form> createForm(@RequestBody Map<String, String> request) {
-        String title = request.get("title");
-        String content = request.get("content");
-        
-        if (title == null || title.isBlank()) {
-            return ResponseEntity.badRequest().build();
-        }
-        
-        Form form = formService.createForm(title, content);
-        return ResponseEntity.status(HttpStatus.CREATED).body(form);
+    public ResponseEntity<FormResponse> createForm(@Valid @RequestBody FormCreateRequest request) {
+        Form form = formService.createForm(request.title(), request.content());
+        return ResponseEntity.status(HttpStatus.CREATED).body(DtoMapper.toFormResponse(form));
     }
     
     @GetMapping
-    public ResponseEntity<List<Form>> getAllForms() {
-        List<Form> forms = formService.getAllForms();
+    public ResponseEntity<List<FormResponse>> getAllForms() {
+        List<FormResponse> forms = formService.getAllForms().stream()
+                .map(DtoMapper::toFormResponse)
+                .toList();
         return ResponseEntity.ok(forms);
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<Form> getFormById(@PathVariable Long id) {
+    public ResponseEntity<FormResponse> getFormById(@PathVariable Long id) {
         return formService.getFormById(id)
+                .map(DtoMapper::toFormResponse)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
     
     @PostMapping("/{id}/public-link")
-    public ResponseEntity<Form> generatePublicLink(@PathVariable Long id) {
-        try {
-            Form form = formService.generatePublicLink(id);
-            return ResponseEntity.ok(form);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<FormResponse> generatePublicLink(@PathVariable Long id) {
+        Form form = formService.generatePublicLink(id);
+        return ResponseEntity.ok(DtoMapper.toFormResponse(form));
     }
     
     @GetMapping("/link/{publicLink}")
-    public ResponseEntity<Form> getFormByPublicLink(@PathVariable String publicLink) {
+    public ResponseEntity<FormResponse> getFormByPublicLink(@PathVariable String publicLink) {
         return formService.getFormByPublicLink(publicLink)
+                .map(DtoMapper::toFormResponse)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
