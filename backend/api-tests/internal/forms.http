@@ -1,0 +1,44 @@
+@baseUrl = http://localhost:8080
+
+### Create form with default content
+POST {{baseUrl}}/api/forms
+Content-Type: application/json
+
+{
+  "title": "Student Course Feedback"
+}
+
+### Create form with custom content
+POST {{baseUrl}}/api/forms
+Content-Type: application/json
+
+{
+  "title": "Employee Satisfaction Survey",
+  "content": "{\"title\":\"Custom Survey\",\"questions\":[{\"id\":1,\"text\":\"Satisfaction?\",\"type\":\"single_choice\",\"required\":true,\"options\":[\"Satisfied\",\"Neutral\",\"Dissatisfied\"]}]}"
+}
+
+### List all forms
+GET {{baseUrl}}/api/forms
+
+### Get form by ID
+GET {{baseUrl}}/api/forms/1
+
+### Generate public link for form
+POST {{baseUrl}}/api/forms/1/public-link
+
+### Regenerate public link
+POST {{baseUrl}}/api/forms/1/public-link
+
+### Create form without title - expect 400
+POST {{baseUrl}}/api/forms
+Content-Type: application/json
+
+{
+  "content": "missing title"
+}
+
+### Get non-existent form - expect 404
+GET {{baseUrl}}/api/forms/999
+
+### Generate link for non-existent form - expect 404
+POST {{baseUrl}}/api/forms/999/public-link
