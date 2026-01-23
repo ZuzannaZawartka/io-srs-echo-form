@@ -1,4 +1,4 @@
-package com.echoform.controller;
+package com.echoform.controller.internal;
 
 import com.echoform.dto.mapper.DtoMapper;
 import com.echoform.dto.request.FormCreateRequest;
@@ -17,16 +17,22 @@ import java.util.List;
 @RequestMapping("/api/forms")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
-public class FormController {
+public class InternalFormController {
     
     private final FormService formService;
     
+    /**
+     * Create a new form
+     */
     @PostMapping
     public ResponseEntity<FormResponse> createForm(@Valid @RequestBody FormCreateRequest request) {
         Form form = formService.createForm(request.title(), request.content());
         return ResponseEntity.status(HttpStatus.CREATED).body(DtoMapper.toFormResponse(form));
     }
     
+    /**
+     * Get all forms (dashboard view for creators)
+     */
     @GetMapping
     public ResponseEntity<List<FormResponse>> getAllForms() {
         List<FormResponse> forms = formService.getAllForms().stream()
@@ -35,6 +41,9 @@ public class FormController {
         return ResponseEntity.ok(forms);
     }
     
+    /**
+     * Get form details by ID (management view)
+     */
     @GetMapping("/{id}")
     public ResponseEntity<FormResponse> getFormById(@PathVariable Long id) {
         return formService.getFormById(id)
@@ -43,17 +52,12 @@ public class FormController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
+    /**
+     * Generate or regenerate public link for a form
+     */
     @PostMapping("/{id}/public-link")
     public ResponseEntity<FormResponse> generatePublicLink(@PathVariable Long id) {
         Form form = formService.generatePublicLink(id);
         return ResponseEntity.ok(DtoMapper.toFormResponse(form));
-    }
-    
-    @GetMapping("/link/{publicLink}")
-    public ResponseEntity<FormResponse> getFormByPublicLink(@PathVariable String publicLink) {
-        return formService.getFormByPublicLink(publicLink)
-                .map(DtoMapper::toFormResponse)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
     }
 }
