@@ -1,0 +1,55 @@
+:root {
+    --bg-dark: #0f172a;
+    --bg-card: #1e293b;
+    --primary: #6366f1;
+    --primary-glow: rgba(99, 102, 241, 0.5);
+    --primary-subtle: rgba(99, 102, 241, 0.1);
+    --secondary: #ec4899;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: rgba(255, 255, 255, 0.1);
+
+    --status-success: #22c55e;
+    --status-neutral: #94a3b8;
+    --status-error: #ef4444;
+
+    --text-contrast: #000;
+    --bg-overlay: rgba(0, 0, 0, 0.2);
+
+    --glass-bg: rgba(30, 41, 59, 0.7);
+    --glass-border: 0.0625rem solid rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 0.5rem 2rem 0 rgba(0, 0, 0, 0.37);
+
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    color: var(--text-main);
+    background-color: var(--bg-dark);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    background: radial-gradient(circle at top left, var(--bg-gradient-start), var(--bg-dark));
+    overflow-x: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    text-shadow: 0 0 10px var(--primary-glow);
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+}
