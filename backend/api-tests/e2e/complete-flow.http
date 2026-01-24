@@ -1,0 +1,89 @@
+@baseUrl = http://localhost:8080
+
+### CREATOR: Create form
+POST {{baseUrl}}/api/forms
+Content-Type: application/json
+
+{
+  "title": "E2E Test Form"
+}
+
+### CREATOR: Generate public link
+POST {{baseUrl}}/api/forms/1/public-link
+
+### CREATOR: Generate token #1 - 30 min
+# RESTful: POST /api/forms/{formId}/tokens
+POST {{baseUrl}}/api/forms/1/tokens
+Content-Type: application/json
+
+{
+  "expiresInMinutes": 30
+}
+
+### CREATOR: Generate token #2 - 60 min
+POST {{baseUrl}}/api/forms/1/tokens
+Content-Type: application/json
+
+{
+  "expiresInMinutes": 60
+}
+
+### CREATOR: Generate token #3 - 120 min
+POST {{baseUrl}}/api/forms/1/tokens
+Content-Type: application/json
+
+{
+  "expiresInMinutes": 120
+}
+
+### CREATOR: View all tokens
+# RESTful: GET /api/forms/{formId}/tokens
+GET {{baseUrl}}/api/forms/1/tokens
+
+### RESPONDENT: Open link without session
+# RESTful: GET /api/public/forms/{publicLink}
+GET {{baseUrl}}/api/public/forms/045456833bad4225ad47a7b574a874c1
+
+### RESPONDENT: Validate token
+# RESTful: POST /api/public/tokens
+POST {{baseUrl}}/api/public/tokens
+Content-Type: application/json
+
+{
+  "publicLink": "045456833bad4225ad47a7b574a874c1",
+  "tokenValue": "OTT-XYXon5Vm7JERzycKJdhX"
+}
+
+### RESPONDENT: Access form with session
+GET {{baseUrl}}/api/public/forms/REPLACE_WITH_LINK
+Cookie: sessionId=REPLACE_WITH_SESSION_ID
+
+### RESPONDENT: Refresh page - session still valid
+GET {{baseUrl}}/api/public/forms/REPLACE_WITH_LINK
+Cookie: sessionId=REPLACE_WITH_SESSION_ID
+
+### RESPONDENT: Try to reuse token - expect 403
+POST {{baseUrl}}/api/public/tokens
+Content-Type: application/json
+
+{
+  "publicLink": "REPLACE_WITH_LINK",
+  "tokenValue": "REPLACE_WITH_USED_TOKEN"
+}
+
+### RESPONDENT #2: Validate different token
+POST {{baseUrl}}/api/public/tokens
+Content-Type: application/json
+
+{
+  "publicLink": "REPLACE_WITH_LINK",
+  "tokenValue": "REPLACE_WITH_TOKEN_2"
+}
+
+### RESPONDENT #2: Access form with their session
+GET {{baseUrl}}/api/public/forms/REPLACE_WITH_LINK
+Cookie: sessionId=REPLACE_WITH_SESSION_ID_2
+
+### After 10+ minutes: Access with expired session
+GET {{baseUrl}}/api/public/forms/REPLACE_WITH_LINK
+Cookie: sessionId=REPLACE_WITH_EXPIRED_SESSION

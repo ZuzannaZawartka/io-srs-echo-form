@@ -1,0 +1,16 @@
+@baseUrl = http://localhost:8080
+
+### Access form without session - returns metadata only
+# RESTful: GET /api/public/forms/{publicLink}
+GET {{baseUrl}}/api/public/forms/REPLACE_WITH_PUBLIC_LINK
+
+### Access form with valid session - returns full content
+GET {{baseUrl}}/api/public/forms/REPLACE_WITH_PUBLIC_LINK
+Cookie: sessionId=REPLACE_WITH_SESSION_ID
+
+### Access form with expired session - returns metadata only
+GET {{baseUrl}}/api/public/forms/REPLACE_WITH_PUBLIC_LINK
+Cookie: sessionId=expired-session-id
+
+### Access form with invalid link - expect 404
+GET {{baseUrl}}/api/public/forms/invalid-link-abc123

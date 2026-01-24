@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/forms")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+
 public class InternalFormController {
     
     private final FormService formService;

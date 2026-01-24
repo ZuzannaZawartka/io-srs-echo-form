@@ -1,0 +1,63 @@
+@baseUrl = http://localhost:8080
+
+### Generate token - default 60 min expiry
+# RESTful: POST /api/forms/{formId}/tokens
+POST {{baseUrl}}/api/forms/1/tokens
+Content-Type: application/json
+
+{
+  "expiresInMinutes": 60
+}
+
+### Generate token - 30 min expiry
+POST {{baseUrl}}/api/forms/1/tokens
+Content-Type: application/json
+
+{
+  "expiresInMinutes": 30
+}
+
+### Generate token - default expiry (no body)
+POST {{baseUrl}}/api/forms/1/tokens
+Content-Type: application/json
+
+{}
+
+### Generate token - 24 hour expiry
+POST {{baseUrl}}/api/forms/1/tokens
+Content-Type: application/json
+
+{
+  "expiresInMinutes": 1440
+}
+
+### List tokens for form
+# RESTful: GET /api/forms/{formId}/tokens
+GET {{baseUrl}}/api/forms/1/tokens
+
+### Generate token with expiry too short - expect 400
+POST {{baseUrl}}/api/forms/1/tokens
+Content-Type: application/json
+
+{
+  "expiresInMinutes": 0
+}
+
+### Generate token with expiry too long - expect 400
+POST {{baseUrl}}/api/forms/1/tokens
+Content-Type: application/json
+
+{
+  "expiresInMinutes": 20000
+}
+
+### Generate token for non-existent form - expect 404
+POST {{baseUrl}}/api/forms/999/tokens
+Content-Type: application/json
+
+{
+  "expiresInMinutes": 60
+}
+
+### List tokens for non-existent form - empty list or 404
+GET {{baseUrl}}/api/forms/999/tokens
