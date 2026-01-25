@@ -47,45 +47,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
     
-    @ExceptionHandler(TokenNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleTokenNotFound(
-            TokenNotFoundException ex,
-            HttpServletRequest request) {
-        
-        ErrorResponse error = new ErrorResponse(
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
-    
-    @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<ErrorResponse> handleTokenExpired(
-            TokenExpiredException ex,
-            HttpServletRequest request) {
-        
-        ErrorResponse error = new ErrorResponse(
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        
-        return ResponseEntity.status(HttpStatus.GONE).body(error);
-    }
-    
-    @ExceptionHandler(TokenAlreadyUsedException.class)
-    public ResponseEntity<ErrorResponse> handleTokenAlreadyUsed(
-            TokenAlreadyUsedException ex,
-            HttpServletRequest request) {
-        
-        ErrorResponse error = new ErrorResponse(
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
-    }
-    
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericError(
             Exception ex,

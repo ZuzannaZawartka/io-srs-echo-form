@@ -1,13 +1,13 @@
 package com.echoform.controller.publicapi;
 
 import com.echoform.dto.mapper.DtoMapper;
-import com.echoform.dto.response.FormMetadataResponse;
 import com.echoform.dto.response.FormResponse;
 import com.echoform.model.Form;
 import com.echoform.service.FormService;
-import com.echoform.service.SessionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -17,34 +17,44 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/public/forms")
 @RequiredArgsConstructor
 
-public class PublicFormController {
+    public class PublicFormController {
     
     private final FormService formService;
-    private final SessionService sessionService;
     
     /**
-     * Get form by public link
+     * Get form metadata
+     */
+    @GetMapping("/{publicLink}/meta")
+    public ResponseEntity<FormResponse> getPublicFormMeta(@PathVariable String publicLink) {
+        Form form = formService.getFormByPublicLinkOrThrow(publicLink);
+        return ResponseEntity.ok(DtoMapper.toFormMetaResponse(form));
+    }
+
+    /**
+     * Get full form content
      */
     @GetMapping("/{publicLink}")
-    public ResponseEntity<?> getFormByPublicLink(
+    public ResponseEntity<FormResponse> getPublicFormContent(
             @PathVariable String publicLink,
-            @CookieValue(value = "sessionId", required = false) String sessionId
+            Authentication authentication
     ) {
-        // Find form
-        Form form = formService.getFormByPublicLink(publicLink)
-                .orElse(null);
+        Form form = formService.getFormByPublicLinkOrThrow(publicLink);
+
+        validateAccess(authentication, form.getId());
         
-        if (form == null) {
-            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(DtoMapper.toFormResponse(form));
+    }
+
+    private void validateAccess(Authentication authentication, Long requestedFormId) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new org.springframework.security.access.AccessDeniedException("User not authenticated");
         }
         
-        // Check if user has valid session for THIS form
-        if (sessionId != null && sessionService.isValidForForm(sessionId, form.getId())) {
-            // Valid session, return FULL form with content
-            return ResponseEntity.ok(DtoMapper.toFormResponse(form));
-        }
+        String principle = authentication.getName();
+        String expectedPrincipal = "form:" + requestedFormId;
         
-        // No valid session, return ONLY metadata (no content)
-        return ResponseEntity.ok(DtoMapper.toFormMetadataResponse(form));
+        if (!expectedPrincipal.equals(principle)) {
+            throw new org.springframework.security.access.AccessDeniedException("Access denied: Token mismatch for form " + requestedFormId);
+        }
     }
 }
