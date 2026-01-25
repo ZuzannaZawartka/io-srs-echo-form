@@ -46,10 +46,8 @@ public class InternalFormController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<FormResponse> getFormById(@PathVariable Long id) {
-        return formService.getFormById(id)
-                .map(DtoMapper::toFormResponse)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Form form = formService.getFormByIdOrThrow(id);
+        return ResponseEntity.ok(DtoMapper.toFormResponse(form));
     }
     
     /**

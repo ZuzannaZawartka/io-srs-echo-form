@@ -6,6 +6,5 @@ public record TokenResponse(
     String tokenValue,
     Long formId,
     LocalDateTime expiresAt,
-    Boolean isUsed,
     LocalDateTime createdAt
 ) {}

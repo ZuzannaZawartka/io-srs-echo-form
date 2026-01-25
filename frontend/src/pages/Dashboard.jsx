@@ -15,15 +15,20 @@ const Dashboard = () => {
         loadForms();
     }, []);
 
-    const loadForms = async () => {
+    const loadForms = async (retryCount = 0) => {
         try {
             const data = await getAllForms();
             setForms(data);
-        } catch (error) {
-            toast.error('Failed to load forms');
-            console.error(error);
-        } finally {
             setLoading(false);
+        } catch (error) {
+            console.error('Difficulies connecting to backend...', error);
+            if (retryCount < 5) {
+                // Retry after 2 seconds (Backend might be warming up)
+                setTimeout(() => loadForms(retryCount + 1), 2000);
+            } else {
+                toast.error('Could not connect to server. Please ensure backend is running.');
+                setLoading(false);
+            }
         }
     };
 

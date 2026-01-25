@@ -1,55 +1,60 @@
 package com.echoform.controller.internal;
 
-import com.echoform.dto.mapper.DtoMapper;
 import com.echoform.dto.request.TokenGenerateRequest;
 import com.echoform.dto.response.TokenResponse;
-import com.echoform.model.OneTimeToken;
-import com.echoform.service.TokenService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.security.authentication.ott.OneTimeTokenService;
+import org.springframework.security.authentication.ott.GenerateOneTimeTokenRequest;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
-/**
- * Internal API - Token Management
- * RESTful nested resource: /api/forms/{formId}/tokens
- */
 @RestController
 @RequestMapping("/api/forms/{formId}/tokens")
 @RequiredArgsConstructor
 
 public class InternalTokenController {
     
-    private final TokenService tokenService;
+    private final OneTimeTokenService oneTimeTokenService;
+    private final com.echoform.repository.OneTimeTokenRepository oneTimeTokenRepository;
+    private final com.echoform.service.FormService formService;
     
-    /**
-     * Generate token for form
-     * POST /api/forms/{formId}/tokens
-     */
     @PostMapping
     public ResponseEntity<TokenResponse> generateToken(
             @PathVariable Long formId,
             @Valid @RequestBody TokenGenerateRequest request
     ) {
-        OneTimeToken token = tokenService.generateToken(
-                formId,
-                request.expiresInMinutes()
+        formService.getFormByIdOrThrow(formId);
+
+        String formPrincipal = "form:" + formId;
+        
+        var generateRequest = new GenerateOneTimeTokenRequest(
+            formPrincipal,
+            java.time.Duration.ofMinutes(request.expiresInMinutes())
         );
-        return ResponseEntity.status(HttpStatus.CREATED).body(DtoMapper.toTokenResponse(token));
+
+        org.springframework.security.authentication.ott.OneTimeToken token = oneTimeTokenService.generate(generateRequest);
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            new TokenResponse(
+                token.getTokenValue(),
+                formId,
+                token.getExpiresAt().atZone(ZoneId.of("UTC")).toLocalDateTime(),
+                LocalDateTime.now()
+            )
+        );
     }
     
-    /**
-     * List all tokens for form
-     * GET /api/forms/{formId}/tokens
-     */
     @GetMapping
     public ResponseEntity<List<TokenResponse>> getTokens(@PathVariable Long formId) {
-        List<TokenResponse> tokens = tokenService.getTokensByFormId(formId).stream()
-                .map(DtoMapper::toTokenResponse)
-                .toList();
+        formService.getFormByIdOrThrow(formId);
+
+        List<TokenResponse> tokens = oneTimeTokenRepository.findTokensByFormId(formId);
         return ResponseEntity.ok(tokens);
     }
 }

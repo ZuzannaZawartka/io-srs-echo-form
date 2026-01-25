@@ -21,7 +21,7 @@ public class FormService {
     public Form createForm(String title, String content) {
         Form form = new Form();
         form.setTitle(title);
-        form.setContent(content != null ? content : getDefaultFormContent());
+        form.setContent(content != null ? content : getDefaultFormContent(title));
         return formRepository.save(form);
     }
     
@@ -35,6 +35,16 @@ public class FormService {
     
     public Optional<Form> getFormByPublicLink(String publicLink) {
         return formRepository.findByPublicLink(publicLink);
+    }
+
+    public Form getFormByPublicLinkOrThrow(String publicLink) {
+        return formRepository.findByPublicLink(publicLink)
+            .orElseThrow(() -> new FormNotFoundException(publicLink)); // Constructor accepts string for "Form not found for link..." logic
+    }
+
+    public Form getFormByIdOrThrow(Long id) {
+        return formRepository.findById(id)
+            .orElseThrow(() -> new FormNotFoundException(id));
     }
     
     @Transactional
@@ -52,7 +62,7 @@ public class FormService {
     }
     
     @lombok.SneakyThrows
-    private String getDefaultFormContent() {
+    private String getDefaultFormContent(String formTitle) {
         var question1 = java.util.Map.of(
             "id", 1,
             "text", "Rate your experience",
@@ -76,8 +86,8 @@ public class FormService {
         );
         
         var formContent = java.util.Map.of(
-            "title", "Default Feedback Form",
-            "description", "Standard feedback questionnaire",
+            "title", formTitle != null ? formTitle : "Default Feedback Form",
+            "description", "Standard feedback questionnaire for " + formTitle,
             "questions", java.util.List.of(question1, question2, question3)
         );
         

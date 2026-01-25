@@ -2,15 +2,15 @@
 
 ### Access form without session - returns metadata only
 # RESTful: GET /api/public/forms/{publicLink}
-GET {{baseUrl}}/api/public/forms/REPLACE_WITH_PUBLIC_LINK
+GET {{baseUrl}}/api/public/forms/98fe27d3372e4485a727f7adf4d7b273
 
 ### Access form with valid session - returns full content
-GET {{baseUrl}}/api/public/forms/REPLACE_WITH_PUBLIC_LINK
-Cookie: sessionId=REPLACE_WITH_SESSION_ID
+GET {{baseUrl}}/api/public/forms/0d049808d2d74d05a230bea660128e2c
+Cookie: JSESSIONID=A9BEA63D43247E2A838098CC110A
 
-### Access form with expired session - returns metadata only
+### Access form with invalid/expired session - expect 403 (or meta)
 GET {{baseUrl}}/api/public/forms/REPLACE_WITH_PUBLIC_LINK
-Cookie: sessionId=expired-session-id
+Cookie: JSESSIONID=expired-session-id
 
 ### Access form with invalid link - expect 404
 GET {{baseUrl}}/api/public/forms/invalid-link-abc123
