@@ -71,7 +71,30 @@ class FormServiceTest {
         // Assert
         assertNotNull(result);
         assertNotNull(result.getContent());
-        assertTrue(result.getContent().contains("Default Feedback Form"));
+        assertTrue(result.getContent().contains(title));
         verify(formRepository, times(1)).save(any(Form.class));
+    }
+    @Test
+    void getFormByPublicLinkOrThrow_ShouldReturnForm_WhenFound() {
+        String link = "abc-123";
+        Form form = new Form();
+        form.setPublicLink(link);
+        
+        when(formRepository.findByPublicLink(link)).thenReturn(Optional.of(form));
+        
+        Form result = formService.getFormByPublicLinkOrThrow(link);
+        
+        assertNotNull(result);
+        assertEquals(link, result.getPublicLink());
+    }
+
+    @Test
+    void getFormByPublicLinkOrThrow_ShouldThrowException_WhenNotFound() {
+        String link = "invalid-link";
+        when(formRepository.findByPublicLink(link)).thenReturn(Optional.empty());
+        
+        assertThrows(com.echoform.exception.FormNotFoundException.class, () -> {
+            formService.getFormByPublicLinkOrThrow(link);
+        });
     }
 }

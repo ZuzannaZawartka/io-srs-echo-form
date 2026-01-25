@@ -1,63 +1,16 @@
 @baseUrl = http://localhost:8080
 
-### Validate token - first use, creates session
-# RESTful: POST /api/public/tokens
-POST {{baseUrl}}/api/public/tokens
-Content-Type: application/json
+### Login with One Time Token (Success)
+# Expect: 200 OK + Sets JSESSIONID cookie
+# Note: token must be valid and exist in DB
+POST {{baseUrl}}/api/login/ott
+Content-Type: application/x-www-form-urlencoded
 
-{
-  "publicLink": "REPLACE_WITH_PUBLIC_LINK",
-  "tokenValue": "REPLACE_WITH_TOKEN"
-}
+token=6f9b6201-f949-48cd-9db6-a6ef0bcdbb5b
 
-### Validate token - already used, expect 403
-POST {{baseUrl}}/api/public/tokens
-Content-Type: application/json
+### Login with Invalid Token (Failure)
+# Expect: 401 Unauthorized (JSON)
+POST {{baseUrl}}/api/login/ott
+Content-Type: application/x-www-form-urlencoded
 
-{
-  "publicLink": "REPLACE_WITH_PUBLIC_LINK",
-  "tokenValue": "REPLACE_WITH_USED_TOKEN"
-}
-
-### Validate non-existent token - expect 404
-POST {{baseUrl}}/api/public/tokens
-Content-Type: application/json
-
-{
-  "publicLink": "some-link",
-  "tokenValue": "OTT-nonexistent"
-}
-
-### Validate token for wrong form - expect 403
-POST {{baseUrl}}/api/public/tokens
-Content-Type: application/json
-
-{
-  "publicLink": "WRONG_LINK",
-  "tokenValue": "TOKEN_FROM_DIFFERENT_FORM"
-}
-
-### Validate without publicLink - expect 400
-POST {{baseUrl}}/api/public/tokens
-Content-Type: application/json
-
-{
-  "tokenValue": "OTT-sometoken"
-}
-
-### Validate without tokenValue - expect 400
-POST {{baseUrl}}/api/public/tokens
-Content-Type: application/json
-
-{
-  "publicLink": "somelink"
-}
-
-### Validate expired token - expect 410
-POST {{baseUrl}}/api/public/tokens
-Content-Type: application/json
-
-{
-  "publicLink": "REPLACE_WITH_LINK",
-  "tokenValue": "REPLACE_WITH_EXPIRED_TOKEN"
-}
+token=INVALID_TOKEN
