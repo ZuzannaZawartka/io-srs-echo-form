@@ -22,6 +22,11 @@ export const generatePublicLink = async (id) => {
 };
 
 // Public API (Respondent)
+export const getPublicFormMeta = async (publicLink) => {
+    const response = await api.get(`/public/forms/${publicLink}/meta`);
+    return response.data;
+};
+
 export const getPublicForm = async (publicLink) => {
     const response = await api.get(`/public/forms/${publicLink}`);
     return response.data;

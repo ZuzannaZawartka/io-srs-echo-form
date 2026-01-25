@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getPublicForm } from '../api/formService';
+import { getPublicForm, getPublicFormMeta } from '../api/formService';
+
 import { validateToken } from '../api/tokenService';
 import { toast } from 'react-toastify';
 import { FaLock, FaPaperPlane } from 'react-icons/fa';
@@ -19,7 +20,8 @@ const PublicFormAccess = () => {
 
     const loadForm = async () => {
         try {
-            const data = await getPublicForm(publicLink);
+            // First load only metadata (public)
+            const data = await getPublicFormMeta(publicLink);
             setForm(data);
         } catch (error) {
             toast.error('Form not found or link invalid');
@@ -37,7 +39,10 @@ const PublicFormAccess = () => {
             setValidating(true);
             await validateToken(publicLink, tokenValue);
             toast.success('Access granted!');
-            await loadForm();
+
+            // After successful validation, fetch the FULL form content
+            const fullData = await getPublicForm(publicLink);
+            setForm(fullData);
         } catch (error) {
             toast.error(error.response?.data?.message || 'Invalid or expired token');
         } finally {

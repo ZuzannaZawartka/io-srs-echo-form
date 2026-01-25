@@ -13,9 +13,14 @@ export const getTokens = async (formId) => {
 
 // Public API (Respondent)
 export const validateToken = async (publicLink, tokenValue) => {
-    const response = await api.post('/public/tokens', {
-        publicLink,
-        tokenValue
+    // Native Spring Security OTT Login expects form-urlencoded data
+    const params = new URLSearchParams();
+    params.append('token', tokenValue);
+
+    const response = await api.post('/login/ott', params, {
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
     });
     return response.data;
 };

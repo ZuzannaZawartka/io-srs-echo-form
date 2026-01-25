@@ -80,7 +80,7 @@ const FormDetails = () => {
             <div className="glass-panel">
                 <h1 className="details-header-title">{form.title}</h1>
                 <div className="details-header-meta">
-                    <p>Created: {new Date(form.createdAt).toLocaleString()}</p>
+                    <p>Created: {new Date(form.createdAt + (form.createdAt.endsWith('Z') ? '' : 'Z')).toLocaleString()}</p>
                     <p>ID: {form.id}</p>
                 </div>
             </div>
@@ -168,16 +168,13 @@ const FormDetails = () => {
                                     </td>
                                 </tr>
                             ) : tokens.map(token => {
-                                const isExpired = new Date() > new Date(token.expiresAt);
-                                const isUsed = token.isUsed;
+                                const expiryDate = new Date(token.expiresAt + (token.expiresAt.endsWith('Z') ? '' : 'Z'));
+                                const isExpired = new Date() > expiryDate;
 
                                 let badgeClass = 'status-active';
                                 let statusText = 'Active';
 
-                                if (isUsed) {
-                                    badgeClass = 'status-used';
-                                    statusText = 'Used';
-                                } else if (isExpired) {
+                                if (isExpired) {
                                     badgeClass = 'status-expired';
                                     statusText = 'Expired';
                                 }
@@ -190,7 +187,7 @@ const FormDetails = () => {
                                                 {statusText}
                                             </span>
                                         </td>
-                                        <td>{new Date(token.expiresAt).toLocaleString()}</td>
+                                        <td>{new Date(token.expiresAt + (token.expiresAt.endsWith('Z') ? '' : 'Z')).toLocaleString()}</td>
                                         <td>
                                             <button
                                                 onClick={() => copyToClipboard(token.tokenValue)}
