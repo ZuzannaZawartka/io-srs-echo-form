@@ -30,34 +30,32 @@ public class GlobalExceptionHandler {
                 errors,
                 request.getRequestURI()
         );
-        
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
-    
-    @ExceptionHandler(FormNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleFormNotFound(
-            FormNotFoundException ex,
-            HttpServletRequest request) {
-        
-        ErrorResponse error = new ErrorResponse(
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
-    
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericError(
             Exception ex,
             HttpServletRequest request) {
-        
+
         ErrorResponse error = new ErrorResponse(
                 "Internal server error",
                 List.of(ex.getMessage()),
                 request.getRequestURI()
         );
-        
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
+
+    @ExceptionHandler(FormNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleFormNotFound(
+            FormNotFoundException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse(
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
 }

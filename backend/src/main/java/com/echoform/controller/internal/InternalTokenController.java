@@ -49,11 +49,10 @@ public class InternalTokenController {
             )
         );
     }
-    
+
     @GetMapping
     public ResponseEntity<List<TokenResponse>> getTokens(@PathVariable Long formId) {
         formService.getFormByIdOrThrow(formId);
-
         List<TokenResponse> tokens = oneTimeTokenRepository.findTokensByFormId(formId);
         return ResponseEntity.ok(tokens);
     }

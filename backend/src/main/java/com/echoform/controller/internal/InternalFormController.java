@@ -31,6 +31,15 @@ public class InternalFormController {
     }
     
     /**
+     * Generate or regenerate public link for a form
+     */
+    @PostMapping("/{id}/public-link")
+    public ResponseEntity<FormResponse> generatePublicLink(@PathVariable Long id) {
+        Form form = formService.generatePublicLink(id);
+        return ResponseEntity.ok(DtoMapper.toFormResponse(form));
+    }
+
+    /**
      * Get all forms (dashboard view for creators)
      */
     @GetMapping
@@ -40,22 +49,13 @@ public class InternalFormController {
                 .toList();
         return ResponseEntity.ok(forms);
     }
-    
+
     /**
      * Get form details by ID (management view)
      */
     @GetMapping("/{id}")
     public ResponseEntity<FormResponse> getFormById(@PathVariable Long id) {
         Form form = formService.getFormByIdOrThrow(id);
-        return ResponseEntity.ok(DtoMapper.toFormResponse(form));
-    }
-    
-    /**
-     * Generate or regenerate public link for a form
-     */
-    @PostMapping("/{id}/public-link")
-    public ResponseEntity<FormResponse> generatePublicLink(@PathVariable Long id) {
-        Form form = formService.generatePublicLink(id);
         return ResponseEntity.ok(DtoMapper.toFormResponse(form));
     }
 }
