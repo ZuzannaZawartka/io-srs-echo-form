@@ -97,4 +97,26 @@ class FormServiceTest {
             formService.getFormByPublicLinkOrThrow(link);
         });
     }
+
+    @Test
+    void getFormByIdOrThrow_ShouldReturnForm_WhenFound() {
+        Form form = new Form();
+        form.setId(1L);
+
+        when(formRepository.findById(1L)).thenReturn(Optional.of(form));
+
+        Form result = formService.getFormByIdOrThrow(1L);
+
+        assertEquals(1L, result.getId());
+    }
+
+    @Test
+    void getFormByIdOrThrow_ShouldThrowException_WhenNotFound() {
+        when(formRepository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThrows(com.echoform.exception.FormNotFoundException.class, () -> {
+            formService.getFormByIdOrThrow(999L);
+        });
+    }
+
 }
