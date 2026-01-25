@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -117,6 +118,18 @@ class FormServiceTest {
         assertThrows(com.echoform.exception.FormNotFoundException.class, () -> {
             formService.getFormByIdOrThrow(999L);
         });
+    }
+
+    @Test
+    void getAllForms_ShouldReturnListOfForms() {
+        Form form1 = new Form();
+        Form form2 = new Form();
+
+        when(formRepository.findAll()).thenReturn(List.of(form1, form2));
+
+        List<Form> forms = formService.getAllForms();
+
+        assertEquals(2, forms.size());
     }
 
 }
