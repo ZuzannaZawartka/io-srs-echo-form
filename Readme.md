@@ -32,22 +32,29 @@
    System umożliwia:
 
    - Tworzenie ankiet statycznych oraz dynamicznych - definiowanie warunkowego wyświetlania pytań. System automatycznie decyduje o ścieżce respondenta na podstawie jego wcześniejszych wyborów
-   - Bezlogowaniowy system dostępu - zarządzanie uprawnieniami do ankiety poprzez unikalne kody (tokeny), co gwarantuje poufność tożsamości
+   - Profil użytkownika dla autora - logowanie twórców ankiet i możliwość zarządzania własnymi ankietami
+   - Bezlogowaniowy system dostępu - kontrola dostępu do ankiet realizowana za pomocą jednorazowych tokenów (one-time tokens), które po pierwszym użyciu tracą ważność, zapewniając anonimowość respondenta oraz eliminując możliwość wielokrotnego wypełnienia tej samej ankiety
    - Warunkowe wyświetlanie pytań - dynamiczne dostosowywanie formularza do odpowiedzi użytkownika
-   - Udostępnianie arkuszy w trzech trybach - publicznym (otwarty link), prywatnym (ograniczona lista odbiorców) oraz zabezpieczonym kodem (wymagane hasło lub token)
+   - Udostępnianie ankiet w dwóch trybach: publicznym - przez otwarty link bez ograniczeń, zabezpieczonym - dostęp możliwy wyłącznie po podaniu jednorazowego tokenu, który po użyciu traci ważność oraz podglądu - wyłącznie dla zalogowanego twórcy, bez zapisywania odpowiedzi
    - Analizę wyników - średnie, rozkłady procentowe, najczęstsze odpowiedzi
    - Automatyzację powiadomień - system informowania autora o postępach w zbieraniu wyników (powiadomienia e-mail)
 
    #### Cele Biznesowe (KPI)
 
-   - Skuteczność wdrożenia MVP  
+   - Zwiększenie zaangażowania respondentów w ankietach anonimowych  
      Umożliwienie Instytucjom Edukacyjnym i Szkoleniowym osiągnięcie wzrostu wskaźnika ukończenia anonimowych ankiet o 25% w ciągu 12 miesięcy, w porównaniu ze standardowymi statycznymi ankietami (z wewnętrznych systemów instytucji)
 
-   - Skrócenie czasu wypełniania  
+   - Optymalizacja czasu wypełniania ankiet poprzez dynamiczną logikę formularzy 
      Zmniejszenie średniego czasu potrzebnego na wypełnienie formularza o 30% dzięki zastosowaniu mechanizmu warunkowego wyświetlania pytań i eliminacji treści nieistotnych dla danego respondenta względem klasycznej statycznej ankiety
 
-   - Powtarzalność wyników  
+   - Zapewnienie powtarzalności efektów wzrostu ukończeń kampanii ankietowych  
      Wzrost wskaźnika ukończenia o założone 25% musi zostać odnotowany w co najmniej 70% wszystkich przeprowadzonych kampanii ankietowych, co potwierdzi stabilność rozwiązania niezależnie od grupy odbiorców
+
+   - Skrócenie czasu tworzenia ankiet w systemie dla autorów
+     Średni czas stworzenia ankiety w systemie jest co najmniej 50% krótszy niż czas potrzebny na ręczne tworzenie analogicznej ankiety w dokumentach.
+
+   - Poprawa jakości danych ankietowych
+     Liczba niepełnych odpowiedzi spada o co najmniej 20% w ankietach dynamicznych w porównaniu do analogicznych ankiet statycznych.
 
    #### Poza Zakresem
 
@@ -76,7 +83,7 @@
 - *Tworzenie ankiet* - intuicyjny kreator formularzy z obsługą różnych typów pytań (otwarte, zamknięte)
 - *Dynamiczna logika pytań* - silnik sterujący wyświetlaniem pytań na podstawie wcześniejszych wyborów respondenta
 - *Anonimowe wypełnianie* - proces zbierania odpowiedzi bez konieczności rejestracji i identyfikacji użytkownika
-- *Kontrola dostępu* - zarządzanie uprawnieniami za pomocą unikalnych tokenów (kodów) oraz linków publicznych/prywatnych
+- *Kontrola dostępu* - zarządzanie uprawnieniami za pomocą linków publicznych oraz jednorazowych tokenów (one-time tokens, które po użyciu tracą ważność 
 - *Analiza wyników* - moduł generujący statystyki (średnie, rozkłady, najczęstsze odpowiedzi)
 - *Powiadomienia e-mail* - automatyczne raporty przesyłane do autora ankiety
 
@@ -91,6 +98,7 @@
 - Definiowanie logiki pytań
 - Generowanie kodów dostępu
 - Analiza zgromadzonych raportów i statystyk
+- Podgląd utworzonej ankiety
 
 *Wymagania:* Wymaga posiadania konta w systemie
 
@@ -159,8 +167,8 @@
 *Źródło:* Wymóg anonimowości, architektura systemu
 
 *Wpływ na projekt:*
-- Konieczność stosowania tokenów sesyjnych zamiast kont użytkowników
-- Utrudnione wykrywanie duplikatów odpowiedzi
+- Konieczność stosowania jednorazowych tokenów zamiast kont użytkowników
+- Tokeny nie są powiązane z konkretnymi osobami, co zapewnia anonimowość
 - Brak możliwości personalizacji ankiet
 - Ograniczone mechanizmy kontroli dostępu
 
@@ -186,8 +194,9 @@
 
 *Wpływ na architekturę:*
 - Wyklucza użycie standardowych systemów zarządzania użytkownikami (np. Spring Security z bazą użytkowników) dla respondentów
-- Logika sprawdzania uprawnień musi być zaimplementowana na poziomie zasobu (ankiety), a nie sesji zalogowanego użytkownika
-- Obsługa dwóch trybów dostępu: Link Publiczny lub wspólne hasło do ankiety
+- Logika sprawdzania uprawnień opiera się na jednorazowych tokenach (one-time tokens) powiązanych z ankietą
+- Obsługa dwóch trybów dostępu dla respondentów: link publiczny lub jednorazowy token
+- Tryb podglądu dostępny tylko dla zalogowanego autora, bez zapisywania odpowiedzi
 
 #### 4. Ograniczenia Prawne
 
@@ -216,13 +225,13 @@
 
 #### Założenie 2 - Mechanizm anonimowej sesji
 
-*Założenie:* Mechanizm anonimowej sesji (token w przeglądarce lub sesja serwera) pozwala wznawiać ankietę po zamknięciu karty bez naruszania anonimowości.
+*Założenie:* Brak możliwości wznawiania ankiety po zamknięciu karty, aby zachować pełną anonimowość i bezpieczeństwo tokenów.
 
-*Ryzyko:* Niestabilna sesja (szybki timeout, utrata tokenu) powoduje utratę postępu i spadek wskaźnika ukończenia ankiet, co uderza w cel biznesowy.
+*Ryzyko:* Respondent może stracić postęp w ankiecie, co może obniżyć wskaźnik ukończenia ankiet.
 
 *Plan walidacji:*
-- *Co:* Poprawność wznawiania anonimowej ankiety.
-- *Jak:* Testy manualne i automatyczne z zamykaniem/otwieraniem ankiety na różnych etapach.
+- *Co:* Sprawdzenie, że ankieta nie wznawia się po odświeżeniu strony lub ponownym otwarciu linku.
+- *Jak:* Testy manualne z wielokrotnym zamykaniem i otwieraniem ankiety.
 - *Kiedy:* Na etapie implementacji MVP, przed testami użyteczności.
 - *Kto:* Zespół deweloperski.
 
@@ -356,18 +365,18 @@ Aby obiektywnie wybrać zakres funkcjonalności dla wersji MVP, zastosowano mode
 
 | Funkcja | Korzyść | Kara | Koszt | Ryzyko | Priorytet |
 |---------|---------|------|-------|--------|-----------|
-| Anonimowe wypełnianie | 21 | 21 | 8 | 5 | *3.23* |
-| Dynamiczne pytania | 21 | 13 | 13 | 8 | *1.62* |
-| Tworzenie ankiet | 13 | 13 | 8 | 5 | *2.00* |
-| Raporty | 13 | 8 | 8 | 5 | *1.62* |
-| Powiadomienia e-mail | 8 | 5 | 5 | 3 | *1.62* |
+| Anonimowe wypełnianie | 21      | 21 | 8 | 5 | *3.23*    |
+| Dynamiczne pytania | 21      | 13 | 13 | 8 | *1.62*    |
+| Tworzenie ankiet | 21      | 13 | 8 | 5 | *2.62*    |
+| Raporty | 13      | 8 | 8 | 5 | *1.62*    |
+| Powiadomienia e-mail | 8       | 5 | 5 | 3 | *1.62*    |
 
 #### Zakres MVP
 
 Na podstawie analizy do wersji MVP zakwalifikowaliśmy:
 
 - *Anonimowe wypełnianie* (priorytet: 3.23)
-- *Tworzenie ankiet* (priorytet: 2.00)
+- *Tworzenie ankiet* (priorytet: 2.62)
 - *Dynamiczną logikę pytań* (priorytet: 1.62)
 
 Funkcje takie jak *powiadomienia e-mail* oraz *podstawowa analiza wyników* uznaliśmy za opcjonalne i mogą zostać dodane w kolejnych iteracjach rozwoju aplikacji.
@@ -393,6 +402,7 @@ Warunki wstępne:
 
 Warunki końcowe:
 - Utworzona ankieta zostaje zapisana w systemie i jest gotowa do udostępnienia respondentom
+- Twórca ankiety może sprawdzić ankietę w trybie podglądu, identycznym z widokiem respondenta, przed jej publikacją
 
 Kryteria akceptacji:
 
@@ -422,6 +432,14 @@ Kryteria akceptacji:
 - *Given:* Jestem twórcą ankiety i posiadam zapisaną ankietę
 - *When:* Edytuję tytuł lub pytania i zapisuję zmiany
 - *Then:* System aktualizuje ankietę w systemie
+
+#### WF-ANK-05: Tryb zabezpieczony tokenem (Scenariusz rozszerzony)
+
+- *Given:* Jestem twórcą ankiety i mam utworzoną ankietę
+- *When:* Ustawiam ankietę w trybie zabezpieczonym jednorazowymi tokenami dla respondentów
+- *Then:* System generuje jednorazowe tokeny
+- *And:* Tokeny są anonimowe i po użyciu tracą ważność
+- *And:* Mogę pobrać lub wysłać tokeny respondentom w celu wypełnienia ankiety
 ---
 
 ### 3.3. Dynamiczna Logika Pytań
@@ -448,15 +466,21 @@ Kryteria akceptacji:
 
 #### WF-DYN-01: Poprawne działanie logiki (Scenariusz główny)
 
-- Given: Ankieta zawiera reguły warunkowe
-- When: Respondent udziela odpowiedzi
-- Then: System wyświetla właściwe kolejne pytanie, logicznie pasujące do poprzedniego
+- *Given:* Ankieta zawiera reguły warunkowe
+- *When:* Respondent udziela odpowiedzi
+- *Then:* System wyświetla właściwe kolejne pytanie, logicznie pasujące do poprzedniego
 
 #### WF-DYN-02: Błędnie skonfigurowana logika (Scenariusz błędu konfiguracji)
 
 - *Given:* Twórca ankiety definiuje sprzeczne reguły warunkowe
 - *When:* Próbuje zapisać ankietę
 - *Then:* System informuje o błędzie w logice pytań
+- *And:* Ankieta nie zostaje zapisana, dopóki reguły nie zostaną poprawione
+
+#### WF-DYN-03: Podgląd ścieżek logicznych (Scenariusz opcjonalny)
+- *Given:* Twórca ankiety konfiguruje reguły warunkowe
+- *When:* Chce podejrzeć ścieżki logiczne przed opublikowaniem ankiety
+- *Then:* System wyświetla wizualną reprezentację wszystkich możliwych ścieżek odpowiedzi
 ---
 
 ### 3.4. Anonimowe Wypełnianie Ankiety
@@ -483,15 +507,15 @@ Kryteria akceptacji:
 
 #### WF-ANO-01: Dostęp przez link (Scenariusz główny)
 
-- Given: Posiadam poprawny link
-- When: Otwieram ankietę
-- Then: Mogę ją wypełnić
+- *Given:* Posiadam poprawny link
+- *When:* Otwieram ankietę
+- *Then:* Mogę ją wypełnić
 
 #### WF-ANO-02: Niepoprawny token (Scenariusz bezpieczeństwa)
 
-- Given: Token jest nieprawidłowy
-- When: Próbuję otworzyć ankietę
-- Then: System blokuje dostęp
+- *Given:* Token jest nieprawidłowy
+- *When:* Próbuję otworzyć ankietę
+- *Then:* System blokuje dostęp
 
 #### WF-ANO-03: Próba wielokrotnego wypełnienia ankiety (Scenariusz zabezpieczenia przed nadużyciem)
 
@@ -510,39 +534,46 @@ Kryteria akceptacji:
 
 Tytuł: Kontrola dostępu do ankiety
 
-Opis: Autor może ustawić tryb dostępu: publiczny, prywatny lub z kodem.
+Opis: Autor może ustawić tryb dostępu: publiczny lub zabezpieczony jednorazowym tokenem. Tokeny są anonimowe, po użyciu tracą ważność, a ich liczba może być ograniczona przez autora.
 
 Historyjka Użytkownika:
 Jako Twórca Ankiety,  
 chcę kontrolować dostęp do ankiety,  
-aby trafiła do właściwej grupy.
-
+aby trafiała do właściwej grupy respondentów, przy zachowaniu anonimowości.
 
 Kryteria akceptacji:
 
 #### WF-ACC-01: Tryb publiczny (Scenariusz główny)
 
-- Given: Ankieta jest publiczna
-- When: Udostępniam link
-- Then: Każdy ma dostęp
+- *Given:* Ankieta jest publiczna
+- *When:* Udostępniam link
+- *Then:* Każdy ma dostęp
 
-#### WF-ACC-02: Tryb z kodem (Scenariusz wariantowy)
+#### WF-ACC-02: Tryb zabezpieczony tokenem (Scenariusz wariantowy)
 
-- Given: Ankieta wymaga kodu
-- When: Respondent wpisuje poprawny kod
-- Then: Uzyskuje dostęp do ankiety
+- *Given:* Ankieta wymaga jednorazowego tokenu
+- *When:* Respondent wpisuje poprawny token
+- *Then:* Uzyskuje dostęp do ankiety
 
-#### WF-ACC-03: Tryb prywatny (Scenariusz ograniczonego dostępu)
+#### WF-ACC-03: Błędny token (Scenariusz błędu autoryzacji)
 
-- *Given:* Ankieta jest ustawiona jako prywatna
-- *When:* Osoba nieuprawniona próbuje otworzyć link
-- *Then:* System odmawia dostępu
+- *Given:* Ankieta wymaga jednorazowego tokenu
+- *When:* Respondent wpisuje niepoprawny token
+- *Then:* System wyświetla komunikat o błędnym tokenie
 
-#### WF-ACC-04: Błędny kod dostępu (Scenariusz błędu autoryzacji)
+#### WF-ACC-04: Token już użyty (Scenariusz błędu autoryzacji)
 
-- *Given:* Ankieta wymaga kodu
-- *When:* Respondent wpisuje niepoprawny kod
-- *Then:* System wyświetla komunikat o błędnym kodzie
+- *Given:* Ankieta wymaga jednorazowego tokenu
+- *And:* Token został już użyty przez innego respondenta
+- *When:* Respondent próbuje użyć tego samego tokenu
+- *Then:* System odmawia dostępu i wyświetla komunikat, że token jest nieważny
+
+#### WF-ACC-05: Tryb podglądu (Scenariusz opcjonalny)
+
+- *Given:* Jestem zalogowanym twórcą ankiety
+- *When:* Wybieram opcję „Podgląd ankiety”
+- *Then:* System wyświetla ankietę w trybie respondenta
+- *And:* Odpowiedzi udzielone w podglądzie nie są zapisywane
 ---
 
 ### 3.6. Analiza Wyników
@@ -560,22 +591,21 @@ aby analizować wyniki.
 Kryteria akceptacji:
 
 #### WF-RAP-01: Wyświetlanie statystyk (Scenariusz główny)
-
-- Given: Ankieta ma zebrane odpowiedzi
-- When: Otwieram raport
-- Then: Widzę statystyki (średnie, rozkłady, najczęstsze odpowiedzi)
+- *Given:* Ankieta ma zebrane odpowiedzi
+- *When:* Otwieram raport
+- *Then:* Widzę statystyki (średnie, rozkłady, najczęstsze odpowiedzi)
 
 #### WF-RAP-02: Brak odpowiedzi (Scenariusz braku danych)
-
-- Given: Ankieta jest pusta (brak odpowiedzi)
-- When: Otwieram raport
-- Then: System informuje o braku danych
+- *Given:* Ankieta jest pusta (brak odpowiedzi)
+- *When:* Otwieram raport
+- *Then:* System informuje o braku danych w raporcie
+- *And:* Nie wyświetla żadnych statystyk
 
 #### WF-RAP-03: Brak uprawnień do raportu (Scenariusz kontroli dostępu)
-
 - *Given:* Użytkownik nie jest autorem ankiety
 - *When:* Próbuje otworzyć raport
 - *Then:* System blokuje dostęp do wyników
+- *And:* Wyświetla komunikat informujący o braku uprawnień
 ---
 
 ### 3.7. Powiadomienia E-mail
@@ -593,10 +623,19 @@ aby być na bieżąco z postępami zbierania odpowiedzi.
 Kryteria akceptacji:
 
 #### WF-MAIL-01: Powiadomienie o nowej odpowiedzi (Scenariusz główny)
+- *Given:* Ankieta jest aktywna
+- *When:* Respondent wypełnia i wysyła ankietę
+- *Then:* Autor otrzymuje powiadomienie e-mail z informacją o nowej odpowiedzi
 
-- Given: Ankieta jest aktywna
-- When: Respondent wypełnia i wysyła ankietę
-- Then: Autor otrzymuje powiadomienie e-mail z informacją o nowej odpowiedzi
+#### WF-MAIL-02: Brak powiadomienia przy nieaktywnej ankiecie (Scenariusz bezpieczeństwa)
+- *Given:* Ankieta jest nieaktywna lub wygasła
+- *When:* Respondent próbuje ją wypełnić
+- *Then:* System nie wysyła powiadomienia do autora
+
+#### WF-MAIL-03: Powiadomienie zbiorcze (Scenariusz rozszerzony)
+- *Given:* Ankieta zebrała kilka odpowiedzi w krótkim czasie
+- *When:* System generuje powiadomienie zbiorcze
+- *Then:* Autor otrzymuje zbiorczą informację o wszystkich nowych odpowiedziach
 ---
 
 ### 3.8. Podgląd Ankiety
@@ -637,6 +676,19 @@ aby sprawdzić poprawność pytań i logiki warunkowej.
 - *Given:* Jestem zalogowanym użytkownikiem, który nie jest autorem ankiety
 - *When:* Próbuję wyświetlić podgląd ankiety
 - *Then:* System blokuje dostęp do podglądu ankiety
+
+#### WF-POD-05: Podgląd po edycji ankiety (Scenariusz rozszerzony)
+- *Given:* Jestem zalogowanym twórcą ankiety, która była ostatnio edytowana
+- *When:* Wybieram opcję „Podgląd ankiety”
+- *Then:* System wyświetla ankietę w aktualnej wersji, uwzględniając wszystkie zmiany pytań i logiki warunkowej
+- *And:* Odpowiedzi udzielone w podglądzie nie są zapisywane
+
+#### WF-POD-06: Podgląd ankiety z błędami logiki (Scenariusz błędu)
+- *Given:* Ankieta zawiera sprzeczne reguły warunkowe
+- *When:* Korzystam z podglądu ankiety
+- *Then:* System sygnalizuje konflikt w logice pytań
+- *And:* System pozwala na podgląd ankiety, ale z informacją, które pytania mogą nie być wyświetlane poprawnie
+
 
 ## 4. Atrybuty Jakościowe
 
