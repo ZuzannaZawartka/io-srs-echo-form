@@ -35,7 +35,7 @@
    - Profil użytkownika dla autora - logowanie twórców ankiet i możliwość zarządzania własnymi ankietami
    - Bezlogowaniowy system dostępu - kontrola dostępu do ankiet realizowana za pomocą jednorazowych tokenów (one-time tokens), które po pierwszym użyciu tracą ważność, zapewniając anonimowość respondenta oraz eliminując możliwość wielokrotnego wypełnienia tej samej ankiety
    - Warunkowe wyświetlanie pytań - dynamiczne dostosowywanie formularza do odpowiedzi użytkownika
-   - Udostępnianie ankiet w dwóch trybach: publicznym - przez otwarty link bez ograniczeń, zabezpieczonym - dostęp możliwy wyłącznie po podaniu jednorazowego tokenu, który po użyciu traci ważność oraz podglądu - wyłącznie dla zalogowanego twórcy, bez zapisywania odpowiedzi
+   - Udostępnianie ankiet w trzech trybach: publicznym - przez otwarty link bez ograniczeń, zabezpieczonym - dostęp możliwy wyłącznie po podaniu jednorazowego tokenu, który po użyciu traci ważność oraz podglądu - wyłącznie dla zalogowanego twórcy, bez zapisywania odpowiedzi
    - Analizę wyników - średnie, rozkłady procentowe, najczęstsze odpowiedzi
    - Automatyzację powiadomień - system informowania autora o postępach w zbieraniu wyników (powiadomienia e-mail)
 
