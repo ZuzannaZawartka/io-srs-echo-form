@@ -76,6 +76,15 @@
    | Token | Unikalny kod dostępu do ankiety |
    | Warunkowe wyświetlanie | Mechanizm pokazywania pytań w zależności od poprzednich odpowiedzi |
 
+### 1.4. Przegląd Dokumentu:
+SRS składa się z kilku rozdziałów opisujących system EchoForm:
+- **Rozdział 1** wprowadza cel dokumentu, wizję, zakres projektu oraz definicje pojęć.
+- **Rozdział 2** przedstawia ogólny opis systemu, jego funkcje, użytkowników, ograniczenia i założenia projektowe.
+- **Rozdział 3** zawiera szczegółowe wymagania funkcjonalne wraz z kryteriami akceptacji.
+- **Rozdział 4** opisuje wymagania niefunkcjonalne oraz kluczowe atrybuty jakościowe systemu.
+- **Rozdział 5** prezentuje analizę wymagań oraz porównanie z istniejącymi rozwiązaniami.
+
+
 ## 2. Opis Ogólny
 
 ### 2.1. Główne Funkcje Produktu
