@@ -1,4 +1,4 @@
-import api from '../../../../../Downloads/io-srs-echo-form/frontend/src/api/axiosConfig.js';
+import api from './axiosConfig';
 
 // Internal API (Creator)
 export const generateToken = async (formId, expiresInMinutes) => {
