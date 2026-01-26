@@ -1,4 +1,4 @@
-import api from './axiosConfig';
+import api from '../../../../../Downloads/io-srs-echo-form/frontend/src/api/axiosConfig.js';
 
 // Internal API (Creator)
 export const generateToken = async (formId, expiresInMinutes) => {
@@ -13,9 +13,9 @@ export const getTokens = async (formId) => {
 
 // Public API (Respondent)
 export const validateToken = async (publicLink, tokenValue) => {
-    // Native Spring Security OTT Login expects form-urlencoded data
     const params = new URLSearchParams();
     params.append('token', tokenValue);
+    params.append('publicLink', publicLink);
 
     const response = await api.post('/login/ott', params, {
         headers: {
