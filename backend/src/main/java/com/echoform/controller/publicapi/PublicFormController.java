@@ -5,7 +5,6 @@ import com.echoform.dto.response.FormResponse;
 import com.echoform.model.Form;
 import com.echoform.service.FormService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 
     public class PublicFormController {
-    
     private final FormService formService;
     
     /**
@@ -39,7 +37,6 @@ import org.springframework.web.bind.annotation.*;
             Authentication authentication
     ) {
         Form form = formService.getFormByPublicLinkOrThrow(publicLink);
-
         validateAccess(authentication, form.getId());
         
         return ResponseEntity.ok(DtoMapper.toFormResponse(form));

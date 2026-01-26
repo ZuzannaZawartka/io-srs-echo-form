@@ -40,13 +40,13 @@
 
    #### Cele Biznesowe (KPI)
 
-   - Skuteczność wdrożenia MVP  
+   - Zwiększenie zaangażowania respondentów w ankietach anonimowych  
      Umożliwienie Instytucjom Edukacyjnym i Szkoleniowym osiągnięcie wzrostu wskaźnika ukończenia anonimowych ankiet o 25% w ciągu 12 miesięcy, w porównaniu ze standardowymi statycznymi ankietami (z wewnętrznych systemów instytucji)
 
-   - Skrócenie czasu wypełniania  
+   - Optymalizacja czasu wypełniania ankiet poprzez dynamiczną logikę formularzy 
      Zmniejszenie średniego czasu potrzebnego na wypełnienie formularza o 30% dzięki zastosowaniu mechanizmu warunkowego wyświetlania pytań i eliminacji treści nieistotnych dla danego respondenta względem klasycznej statycznej ankiety
 
-   - Powtarzalność wyników  
+   - Zapewnienie powtarzalności efektów wzrostu ukończeń kampanii ankietowych  
      Wzrost wskaźnika ukończenia o założone 25% musi zostać odnotowany w co najmniej 70% wszystkich przeprowadzonych kampanii ankietowych, co potwierdzi stabilność rozwiązania niezależnie od grupy odbiorców
 
    #### Poza Zakresem
