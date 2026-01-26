@@ -32,9 +32,10 @@
    System umożliwia:
 
    - Tworzenie ankiet statycznych oraz dynamicznych - definiowanie warunkowego wyświetlania pytań. System automatycznie decyduje o ścieżce respondenta na podstawie jego wcześniejszych wyborów
+   - Profil użytkownika dla autora - logowanie twórców ankiet i możliwość zarządzania własnymi ankietami
    - Bezlogowaniowy system dostępu - kontrola dostępu do ankiet realizowana za pomocą jednorazowych tokenów (one-time tokens), które po pierwszym użyciu tracą ważność, zapewniając anonimowość respondenta oraz eliminując możliwość wielokrotnego wypełnienia tej samej ankiety
    - Warunkowe wyświetlanie pytań - dynamiczne dostosowywanie formularza do odpowiedzi użytkownika
-   - Udostępnianie ankiet w dwóch trybach: publicznym - przez otwarty link bez ograniczeń oraz zabezpieczonym - dostęp możliwy wyłącznie po podaniu jednorazowego tokenu, który po użyciu traci ważność
+   - Udostępnianie ankiet w dwóch trybach: publicznym - przez otwarty link bez ograniczeń, zabezpieczonym - dostęp możliwy wyłącznie po podaniu jednorazowego tokenu, który po użyciu traci ważność oraz podglądu - wyłącznie dla zalogowanego twórcy, bez zapisywania odpowiedzi
    - Analizę wyników - średnie, rozkłady procentowe, najczęstsze odpowiedzi
    - Automatyzację powiadomień - system informowania autora o postępach w zbieraniu wyników (powiadomienia e-mail)
 
@@ -97,6 +98,7 @@
 - Definiowanie logiki pytań
 - Generowanie kodów dostępu
 - Analiza zgromadzonych raportów i statystyk
+- Podgląd utworzonej ankiety
 
 *Wymagania:* Wymaga posiadania konta w systemie
 
@@ -193,7 +195,8 @@
 *Wpływ na architekturę:*
 - Wyklucza użycie standardowych systemów zarządzania użytkownikami (np. Spring Security z bazą użytkowników) dla respondentów
 - Logika sprawdzania uprawnień opiera się na jednorazowych tokenach (one-time tokens) powiązanych z ankietą
-- Obsługa dwóch trybów dostępu: link publiczny lub jednorazowy token
+- Obsługa dwóch trybów dostępu dla respondentów: link publiczny lub jednorazowy token
+- Tryb podglądu dostępny tylko dla zalogowanego autora, bez zapisywania odpowiedzi
 
 #### 4. Ograniczenia Prawne
 
@@ -399,6 +402,7 @@ Warunki wstępne:
 
 Warunki końcowe:
 - Utworzona ankieta zostaje zapisana w systemie i jest gotowa do udostępnienia respondentom
+- Twórca ankiety może sprawdzić ankietę w trybie podglądu, identycznym z widokiem respondenta, przed jej publikacją
 
 Kryteria akceptacji:
 
@@ -428,6 +432,14 @@ Kryteria akceptacji:
 - *Given:* Jestem twórcą ankiety i posiadam zapisaną ankietę
 - *When:* Edytuję tytuł lub pytania i zapisuję zmiany
 - *Then:* System aktualizuje ankietę w systemie
+
+#### WF-ANK-05: Tryb zabezpieczony tokenem (Scenariusz rozszerzony)
+
+- *Given:* Jestem twórcą ankiety i mam utworzoną ankietę
+- *When:* Ustawiam ankietę w trybie zabezpieczonym jednorazowymi tokenami dla respondentów
+- *Then:* System generuje jednorazowe tokeny
+- *And:* Tokeny są anonimowe i po użyciu tracą ważność
+- *And:* Mogę pobrać lub wysłać tokeny respondentom w celu wypełnienia ankiety
 ---
 
 ### 3.3. Dynamiczna Logika Pytań
@@ -454,15 +466,21 @@ Kryteria akceptacji:
 
 #### WF-DYN-01: Poprawne działanie logiki (Scenariusz główny)
 
-- Given: Ankieta zawiera reguły warunkowe
-- When: Respondent udziela odpowiedzi
-- Then: System wyświetla właściwe kolejne pytanie, logicznie pasujące do poprzedniego
+- *Given:* Ankieta zawiera reguły warunkowe
+- *When:* Respondent udziela odpowiedzi
+- *Then:* System wyświetla właściwe kolejne pytanie, logicznie pasujące do poprzedniego
 
 #### WF-DYN-02: Błędnie skonfigurowana logika (Scenariusz błędu konfiguracji)
 
 - *Given:* Twórca ankiety definiuje sprzeczne reguły warunkowe
 - *When:* Próbuje zapisać ankietę
 - *Then:* System informuje o błędzie w logice pytań
+- *And:* Ankieta nie zostaje zapisana, dopóki reguły nie zostaną poprawione
+
+#### WF-DYN-03: Podgląd ścieżek logicznych (Scenariusz opcjonalny)
+- *Given:* Twórca ankiety konfiguruje reguły warunkowe
+- *When:* Chce podejrzeć ścieżki logiczne przed opublikowaniem ankiety
+- *Then:* System wyświetla wizualną reprezentację wszystkich możliwych ścieżek odpowiedzi
 ---
 
 ### 3.4. Anonimowe Wypełnianie Ankiety
@@ -489,15 +507,15 @@ Kryteria akceptacji:
 
 #### WF-ANO-01: Dostęp przez link (Scenariusz główny)
 
-- Given: Posiadam poprawny link
-- When: Otwieram ankietę
-- Then: Mogę ją wypełnić
+- *Given:* Posiadam poprawny link
+- *When:* Otwieram ankietę
+- *Then:* Mogę ją wypełnić
 
 #### WF-ANO-02: Niepoprawny token (Scenariusz bezpieczeństwa)
 
-- Given: Token jest nieprawidłowy
-- When: Próbuję otworzyć ankietę
-- Then: System blokuje dostęp
+- *Given:* Token jest nieprawidłowy
+- *When:* Próbuję otworzyć ankietę
+- *Then:* System blokuje dostęp
 
 #### WF-ANO-03: Próba wielokrotnego wypełnienia ankiety (Scenariusz zabezpieczenia przed nadużyciem)
 
@@ -527,28 +545,35 @@ Kryteria akceptacji:
 
 #### WF-ACC-01: Tryb publiczny (Scenariusz główny)
 
-- Given: Ankieta jest publiczna
-- When: Udostępniam link
-- Then: Każdy ma dostęp
+- *Given:* Ankieta jest publiczna
+- *When:* Udostępniam link
+- *Then:* Każdy ma dostęp
 
 #### WF-ACC-02: Tryb zabezpieczony tokenem (Scenariusz wariantowy)
 
-- Given: Ankieta wymaga jednorazowego tokenu
-- When: Respondent wpisuje poprawny token
-- Then: Uzyskuje dostęp do ankiety
+- *Given:* Ankieta wymaga jednorazowego tokenu
+- *When:* Respondent wpisuje poprawny token
+- *Then:* Uzyskuje dostęp do ankiety
 
 #### WF-ACC-03: Błędny token (Scenariusz błędu autoryzacji)
 
-- Given: Ankieta wymaga jednorazowego tokenu
-- When: Respondent wpisuje niepoprawny token
-- Then: System wyświetla komunikat o błędnym tokenie
+- *Given:* Ankieta wymaga jednorazowego tokenu
+- *When:* Respondent wpisuje niepoprawny token
+- *Then:* System wyświetla komunikat o błędnym tokenie
 
 #### WF-ACC-04: Token już użyty (Scenariusz błędu autoryzacji)
 
-- Given: Ankieta wymaga jednorazowego tokenu
-- And: Token został już użyty przez innego respondenta
-- When: Respondent próbuje użyć tego samego tokenu
-- Then: System odmawia dostępu i wyświetla komunikat, że token jest nieważny
+- *Given:* Ankieta wymaga jednorazowego tokenu
+- *And:* Token został już użyty przez innego respondenta
+- *When:* Respondent próbuje użyć tego samego tokenu
+- *Then:* System odmawia dostępu i wyświetla komunikat, że token jest nieważny
+
+#### WF-ACC-05: Tryb podglądu (Scenariusz opcjonalny)
+
+- *Given:* Jestem zalogowanym twórcą ankiety
+- *When:* Wybieram opcję „Podgląd ankiety”
+- *Then:* System wyświetla ankietę w trybie respondenta
+- *And:* Odpowiedzi udzielone w podglądzie nie są zapisywane
 ---
 
 ### 3.6. Analiza Wyników
@@ -566,22 +591,21 @@ aby analizować wyniki.
 Kryteria akceptacji:
 
 #### WF-RAP-01: Wyświetlanie statystyk (Scenariusz główny)
-
-- Given: Ankieta ma zebrane odpowiedzi
-- When: Otwieram raport
-- Then: Widzę statystyki (średnie, rozkłady, najczęstsze odpowiedzi)
+- *Given:* Ankieta ma zebrane odpowiedzi
+- *When:* Otwieram raport
+- *Then:* Widzę statystyki (średnie, rozkłady, najczęstsze odpowiedzi)
 
 #### WF-RAP-02: Brak odpowiedzi (Scenariusz braku danych)
-
-- Given: Ankieta jest pusta (brak odpowiedzi)
-- When: Otwieram raport
-- Then: System informuje o braku danych
+- *Given:* Ankieta jest pusta (brak odpowiedzi)
+- *When:* Otwieram raport
+- *Then:* System informuje o braku danych w raporcie
+- *And:* Nie wyświetla żadnych statystyk
 
 #### WF-RAP-03: Brak uprawnień do raportu (Scenariusz kontroli dostępu)
-
-- Given: Użytkownik nie jest autorem ankiety
-- When: Próbuje otworzyć raport
-- Then: System blokuje dostęp do wyników
+- *Given:* Użytkownik nie jest autorem ankiety
+- *When:* Próbuje otworzyć raport
+- *Then:* System blokuje dostęp do wyników
+- *And:* Wyświetla komunikat informujący o braku uprawnień
 ---
 
 ### 3.7. Powiadomienia E-mail
@@ -599,10 +623,19 @@ aby być na bieżąco z postępami zbierania odpowiedzi.
 Kryteria akceptacji:
 
 #### WF-MAIL-01: Powiadomienie o nowej odpowiedzi (Scenariusz główny)
+- *Given:* Ankieta jest aktywna
+- *When:* Respondent wypełnia i wysyła ankietę
+- *Then:* Autor otrzymuje powiadomienie e-mail z informacją o nowej odpowiedzi
 
-- Given: Ankieta jest aktywna
-- When: Respondent wypełnia i wysyła ankietę
-- Then: Autor otrzymuje powiadomienie e-mail z informacją o nowej odpowiedzi
+#### WF-MAIL-02: Brak powiadomienia przy nieaktywnej ankiecie (Scenariusz bezpieczeństwa)
+- *Given:* Ankieta jest nieaktywna lub wygasła
+- *When:* Respondent próbuje ją wypełnić
+- *Then:* System nie wysyła powiadomienia do autora
+
+#### WF-MAIL-03: Powiadomienie zbiorcze (Scenariusz rozszerzony)
+- *Given:* Ankieta zebrała kilka odpowiedzi w krótkim czasie
+- *When:* System generuje powiadomienie zbiorcze
+- *Then:* Autor otrzymuje zbiorczą informację o wszystkich nowych odpowiedziach
 ---
 
 ### 3.8. Podgląd Ankiety
@@ -643,6 +676,19 @@ aby sprawdzić poprawność pytań i logiki warunkowej.
 - *Given:* Jestem zalogowanym użytkownikiem, który nie jest autorem ankiety
 - *When:* Próbuję wyświetlić podgląd ankiety
 - *Then:* System blokuje dostęp do podglądu ankiety
+
+#### WF-POD-05: Podgląd po edycji ankiety (Scenariusz rozszerzony)
+- *Given:* Jestem zalogowanym twórcą ankiety, która była ostatnio edytowana
+- *When:* Wybieram opcję „Podgląd ankiety”
+- *Then:* System wyświetla ankietę w aktualnej wersji, uwzględniając wszystkie zmiany pytań i logiki warunkowej
+- *And:* Odpowiedzi udzielone w podglądzie nie są zapisywane
+
+#### WF-POD-06: Podgląd ankiety z błędami logiki (Scenariusz błędu)
+- *Given:* Ankieta zawiera sprzeczne reguły warunkowe
+- *When:* Korzystam z podglądu ankiety
+- *Then:* System sygnalizuje konflikt w logice pytań
+- *And:* System pozwala na podgląd ankiety, ale z informacją, które pytania mogą nie być wyświetlane poprawnie
+
 
 ## 4. Atrybuty Jakościowe
 
