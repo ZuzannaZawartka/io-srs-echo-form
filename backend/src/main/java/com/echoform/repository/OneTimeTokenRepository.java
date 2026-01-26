@@ -25,4 +25,13 @@ public class OneTimeTokenRepository {
             LocalDateTime.now()
         ), formPrincipal);
     }
+    public java.util.Optional<String> findUsernameByToken(String tokenValue) {
+        String sql = "SELECT username FROM one_time_tokens WHERE token_value = ?";
+        try {
+            String username = jdbcTemplate.queryForObject(sql, String.class, tokenValue);
+            return java.util.Optional.ofNullable(username);
+        } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+            return java.util.Optional.empty();
+        }
+    }
 }

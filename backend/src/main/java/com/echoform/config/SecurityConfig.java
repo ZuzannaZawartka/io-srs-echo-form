@@ -1,6 +1,7 @@
 package com.echoform.config;
 
 import com.echoform.security.RestAuthenticationEntryPoint;
+import com.echoform.security.TokenScopeValidationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final RestAuthenticationEntryPoint authenticationEntryPoint;
+    private final TokenScopeValidationFilter tokenScopeValidationFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -42,10 +44,10 @@ public class SecurityConfig {
             // Handle POST /api/login/ott: Validate token, Create Session
             .oneTimeTokenLogin(ott -> ott
                 .loginProcessingUrl("/api/login/ott")
-                .showDefaultSubmitPage(false)
                 .authenticationSuccessHandler(ottLoginSuccessHandler())
                 .authenticationFailureHandler(ottLoginFailureHandler())
-            );
+            )
+            .addFilterBefore(tokenScopeValidationFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
